@@ -7,8 +7,9 @@ namespace TeachMe.DomainTest
     public class RobotTest
     {
         [TestMethod]
-        public void TestMethod1()
+        public void Should_()
         {
+            
         }
     }
 }

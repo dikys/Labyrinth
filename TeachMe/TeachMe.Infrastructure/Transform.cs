@@ -14,34 +14,41 @@ namespace TeachMe.Infrastructure
             this.Rotation = rotation;
         }
 
-        public Location Location { get; private set; }
-        public Rotation Rotation { get; private set; }
-        public Location Forward
+        public Location Location { get; }
+        public Rotation Rotation { get; }
+        public Location Forward => this.Rotation.GetForward();
+
+        #region value semantics
+
+        public Transform Rotate(int angle)
         {
-            get
-            {
-                return this.Rotation.GetForward();
-            }
+            return new Transform(this.Location, this.Rotation + angle);
         }
 
-        public static Transform operator+ (Transform left, Location right)
+        public static Transform operator +(Transform left, Location right)
         {
             return new Transform(left.Location + right, left.Rotation);
         }
 
-        public static Transform operator- (Transform left, Location right)
+        public static Transform operator -(Transform left, Location right)
         {
             return new Transform(left.Location - right, left.Rotation);
         }
 
-        public static Transform operator+ (Transform left, Rotation right)
+        private bool Equals(Transform other)
         {
-            return new Transform(left.Location, left.Rotation + right);
+            return this.Location.Equals(other.Location) && this.Rotation.Equals(other.Rotation);
         }
 
-        public static Transform operator- (Transform left, Rotation right)
+        public override bool Equals(object obj)
         {
-            return new Transform(left.Location, left.Rotation - right);
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (this.GetType() != obj.GetType()) return false;
+
+            return Equals((Transform)obj);
         }
+
+        #endregion
     }
 }

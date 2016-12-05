@@ -14,25 +14,35 @@ namespace TeachMe.Infrastructure
             this.Y = y;
         }
 
-        public int X { get; private set; }
-        public int Y { get; private set; }
-
-        //public Location Rotate(Rotation rotation)
-        //{
-        //    return new Location(
-        //        this.X * Math.Cos(rotation.Angle) - this.Y * Math.Sin(rotation.Angle),
-        //        this.X * Math.Sin(rotation.Angle) - this.Y * Math.Cos(rotation.Angle));
-        //}
+        public int X { get; }
+        public int Y { get; }
         
+        #region value semantics
 
-        public static Location operator+ (Location left, Location rigth)
+        public static Location operator +(Location left, Location rigth)
         {
             return new Location(left.X + rigth.X, left.Y + rigth.Y);
         }
 
-        public static Location operator- (Location left, Location rigth)
+        public static Location operator -(Location left, Location rigth)
         {
             return new Location(left.X - rigth.X, left.Y - rigth.Y);
         }
+
+        private bool Equals(Location other)
+        {
+            return this.X == other.X && this.Y == other.Y;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (this.GetType() != obj.GetType()) return false;
+
+            return Equals((Location)obj);
+        }
+
+        #endregion
     }
 }

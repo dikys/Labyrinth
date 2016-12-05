@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace TeachMe.Domain
 {
-    public class Game
+    public class GameModel
     {
-        public Game(Robot robot, Field field)
+        public GameModel(Robot robot, Field field)
         {
             if (robot == null)
                 throw new ArgumentNullException("robot");

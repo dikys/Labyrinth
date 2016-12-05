@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace TeachMe.Infrastructure
 {
-    public enum Angles : int { Left = -90, Right = 90, Up = 180, Down = -180 }
-
+    public enum Angles : int { Left = 180, Right = 0, Up = 90, Down = 270 }
+    
     public struct Rotation
     {
         public Rotation (Angles angle)
@@ -15,20 +15,7 @@ namespace TeachMe.Infrastructure
             this.Angle = angle;
         }
 
-        public Angles Angle
-        {
-            get
-            {
-                return this.Angle;
-            }
-            private set
-            {
-                //if (!(0 <= value && value <= 360))
-                //    throw new ArgumentOutOfRangeException("Angle should be between 0 and 360");
-
-                this.Angle = value;
-            }
-        }
+        public Angles Angle { get; }
 
         public Location GetForward ()
         {
@@ -41,25 +28,53 @@ namespace TeachMe.Infrastructure
             else
                 return new Location(0, -1);
         }
-
-        public static Rotation operator+ (Rotation left, Rotation right)
+        
+        public static Angles ConvertToAngle(int angle)
         {
-            return new Rotation((Angles)((int)left.Angle + (int)right.Angle));
+            if (0 <= angle && angle < 360)
+                return (Angles)angle;
+
+            if (angle % 360 == 0)
+                return 0;
+
+            if (angle < 0)
+            {
+                angle = (angle / 360 + 1)*360 + angle;
+            }
+            else if (360 < angle)
+            {
+                angle = angle - (angle / 360 + 1) * 360;
+            }
+            
+            return (Angles)(angle);
+        }
+        
+        #region value semantics
+
+        public static explicit operator Rotation(int angle)
+        {
+            return new Rotation(ConvertToAngle(angle));
         }
 
-        public static Rotation operator- (Rotation left, Rotation right)
+        public static Rotation operator +(Rotation left, int right)
         {
-            return new Rotation((Angles)((int)left.Angle - (int)right.Angle));
+            return new Rotation(ConvertToAngle((int)left.Angle + right));
         }
 
-        //public static int Trim (int value)
-        //{
-        //    return Math.Min(Math.Max(value, 360), 0);
-        //}
+        private bool Equals(Rotation other)
+        {
+            return this.Angle == other.Angle;
+        }
 
-        //public static Rotation operator+ (Rotation left, Rotation right)
-        //{
-        //    return new Rotation(left.Angle + right.Angle);
-        //}
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (this.GetType() != obj.GetType()) return false;
+            
+            return Equals((Rotation)obj);
+        }
+
+        #endregion
     }
 }

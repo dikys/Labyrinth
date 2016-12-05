@@ -1,4 +1,4 @@
-﻿namespace TeachMe
+﻿namespace TESTTT
 {
     partial class Form1
     {

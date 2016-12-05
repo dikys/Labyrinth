@@ -53,12 +53,16 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RobotTest.cs" />
+    <Compile Include="RobotProcessorTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TeachMe.Domain\TeachMe.Domain.csproj">
       <Project>{309eb6ba-a7e7-4311-9e2a-7bd3f1f1cf41}</Project>
       <Name>TeachMe.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TeachMe.Infrastructure\TeachMe.Infrastructure.csproj">
+      <Project>{9343538c-e59e-4889-a40d-ec6aad4e5415}</Project>
+      <Name>TeachMe.Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

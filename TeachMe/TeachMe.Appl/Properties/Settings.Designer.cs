@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TESTTT.Properties
+namespace TeachMe.Appl.Properties
 {
 
 

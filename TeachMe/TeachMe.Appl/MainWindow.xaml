@@ -37,7 +37,7 @@
                     <TextBlock Text="Визуальное программирование робота." Foreground="White"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Right" Width="150" LastChildFill="False">
-                    <WrapPanel DockPanel.Dock="Top"></WrapPanel>
+                    <ListBox x:Name="currentProgramm" MinHeight="200" DockPanel.Dock="Top"></ListBox>
                     <Button DockPanel.Dock="Top">Редактировать</Button>
                     <Button DockPanel.Dock="Bottom">Запустить</Button>
                 </DockPanel>

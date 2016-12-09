@@ -1,18 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting.Channels;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using TeachMe.Domain;
+using TeachMe.Infrastructure;
 
 namespace TeachMe.Appl
 {
@@ -35,6 +24,36 @@ namespace TeachMe.Appl
                     this.WindowState =
                         this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
             this.closingButton.Click += (sender, args) => this.Close();
+
+            var robot = new Robot(new Transform());
+            robot.Processor.Commands.AddRange(new Action[]
+            {
+                robot.Forward,
+                robot.Forward,
+                robot.Forward,
+                robot.Forward,
+                robot.Leftward,
+                robot.Forward,
+                robot.Forward,
+                robot.Forward,
+                robot.Forward,
+                robot.Leftward,
+                robot.Forward,
+                robot.Forward,
+                robot.Forward,
+                robot.Forward,
+                robot.Leftward,
+                robot.Forward,
+                robot.Forward,
+                robot.Forward,
+                robot.Forward,
+                robot.Leftward
+            });
+
+            var gameModel = new GameModel(robot,
+                new Field(5, 5));
+
+            this.currentProgramm.DataContext = robot.Processor.Commands;
         }
     }
 }

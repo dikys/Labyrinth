@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using TeachMe.Domain;
 using TeachMe.Infrastructure;
 
@@ -15,15 +17,15 @@ namespace TeachMe.Appl
             InitializeComponent();
             
             this.MouseLeftButtonDown += (sender, args) => this.DragMove();
-            this.foldingButton.Click +=
+            this.FoldingButton.Click +=
                 (sender, args) =>
                     this.WindowState =
                         this.WindowState == WindowState.Minimized ? WindowState.Normal : WindowState.Minimized;
-            this.minimizedAndMaximizedButton.Click +=
+            this.MinimizedAndMaximizedButton.Click +=
                 (sender, args) =>
                     this.WindowState =
                         this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
-            this.closingButton.Click += (sender, args) => this.Close();
+            this.ClosingButton.Click += (sender, args) => this.Close();
 
             var robot = new Robot(new Transform());
             robot.Processor.Commands.AddRange(new Action[]
@@ -53,7 +55,25 @@ namespace TeachMe.Appl
             var gameModel = new GameModel(robot,
                 new Field(5, 5));
 
-            this.currentProgramm.DataContext = robot.Processor.Commands;
+            var data = new List<Button>();
+            data.Add(new Button {Content = "Нажми на меня"});
+            data.Add(new Button {Content = "Нажми на меня 2"});
+            data.Add(new Button {Content = "Нажми на меня 2"});
+            data.Add(new Button {Content = "Нажми на меня 2"});
+            data.Add(new Button {Content = "Нажми на меня 2"});
+            data.Add(new Button {Content = "Нажми на меня 2"});
+            data.Add(new Button {Content = "Нажми на меня 2"});
+            data.Add(new Button {Content = "Нажми на меня 2"});
+            data.Add(new Button {Content = "Нажми на меня 2"});
+            data.Add(new Button {Content = "Нажми на меня 2"});
+            data.Add(new Button {Content = "Нажми на меня 2"});
+            data.Add(new Button {Content = "Нажми на меня 2"});
+            data.Add(new Button {Content = "Нажми на меня 2"});
+            data.Add(new Button {Content = "Нажми на меня 2"});
+            data.Add(new Button {Content = "Нажми на меня 2"});
+            data.Add(new Button {Content = "Нажми на меня 2"});
+
+            this.CurrentProgramm.ItemsSource = data;
         }
     }
 }

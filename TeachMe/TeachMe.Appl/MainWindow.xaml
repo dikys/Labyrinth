@@ -6,39 +6,97 @@
         xmlns:local="clr-namespace:TeachMe.Appl"
         mc:Ignorable="d"
         Title="MainWindow"
-        Height="376.316"
-        Width="688.158"
-        AllowsTransparency="true"
+        Height="586.972"
+        Width="903.411"
+        AllowsTransparency="False"
         WindowStyle="None"
-        ResizeMode="CanResizeWithGrip">
+        ResizeMode="CanResizeWithGrip"
+        Background="#FF32CD32">
     <Window.Resources>
+        <SolidColorBrush x:Key="MainBackgroundColor" Color="#FF32CD32"></SolidColorBrush>
+        <SolidColorBrush x:Key="MainForegroundColor" Color="#FF000000"></SolidColorBrush>
+        <ControlTemplate x:Key="ButtonTemplate" TargetType="Button">
+            <Border x:Name="buttonBorder"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Background="{TemplateBinding Background}"
+                                Height="{TemplateBinding Height}"
+                                Width="{TemplateBinding Width}">
+                <ContentControl Margin="{TemplateBinding Padding}"
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                    Content="{TemplateBinding Content}" />
+            </Border>
+        </ControlTemplate>
         <Style TargetType="Button">
             <Style.Setters>
-                <Setter Property="Padding" Value="10"/>
                 <Setter Property="Cursor" Value="Hand"/>
-                <Setter Property="Background" Value="LimeGreen"/>
-                <Setter Property="Foreground" Value="Black"/>
+                <Setter Property="Background" Value="{StaticResource MainBackgroundColor}"/>
+                <Setter Property="Foreground" Value="{StaticResource MainForegroundColor}"/>
+                <Setter Property="Padding" Value="15"></Setter>
                 <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Template" Value="{StaticResource ButtonTemplate}"/>
             </Style.Setters>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="Red"/>
+                    <Setter Property="Background" Value="DeepPink"></Setter>
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <Style x:Key="TopToolButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Padding" Value="0"></Setter>
+            <Setter Property="DockPanel.Dock" Value="Right"/>
+            <Setter Property="Width" Value="32"/>
+            <Setter Property="Height" Value="25"/>
+        </Style>
+        <Style x:Key="ListWithCommands" TargetType="ListBox">
+            <Style.Setters>
+                <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"></Setter>
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="ItemTemplate">
+                    <Setter.Value>
+                        <DataTemplate>
+                            <Rectangle Width="40" Height="40" Fill="Bisque"></Rectangle>
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style.Setters>
+        </Style>
     </Window.Resources>
-    <Grid x:Name="mainGrid">
+    <Grid x:Name="MainGrid">
         <Border Width="auto" Height="auto" BorderBrush="LimeGreen" Background="#101010" BorderThickness="2">
             <DockPanel LastChildFill="True">
                 <DockPanel DockPanel.Dock="Top" LastChildFill="True">
-                    <Button x:Name="closingButton" DockPanel.Dock="Right">Закрыть</Button>
-                    <Button x:Name="minimizedAndMaximizedButton" DockPanel.Dock="Right">На весь экран</Button>
-                    <Button x:Name="foldingButton" DockPanel.Dock="Right">Свернуть</Button>
+                    <Button x:Name="ClosingButton" Style="{StaticResource TopToolButton}">
+                        <Canvas Margin="-6">
+                            <Line X1="0" Y1="0" X2="12" Y2="12" Stroke="Black" StrokeThickness="1" />
+                            <Line X1="0" Y1="12" X2="12" Y2="0" Stroke="Black" StrokeThickness="1" />
+                        </Canvas>
+                    </Button>
+                    <Button x:Name="MinimizedAndMaximizedButton" Style="{StaticResource TopToolButton}">
+                        <Canvas Margin="-6">
+                            <Rectangle Width="12" Height="12" Stroke="Black"/>
+                            <Rectangle Margin="2 -2" Width="12" Height="12" Stroke="Black"/>
+                        </Canvas>
+                    </Button>
+                    <Button x:Name="FoldingButton" Style="{StaticResource TopToolButton}">
+                        <Canvas Margin="-6">
+                            <Line X1="0" Y1="11" X2="12" Y2="11" Stroke="Black" StrokeThickness="2" />
+                        </Canvas>
+                    </Button>
                     <TextBlock Text="Визуальное программирование робота." Foreground="White"/>
                 </DockPanel>
-                <DockPanel DockPanel.Dock="Right" Width="150" LastChildFill="False">
-                    <ListBox x:Name="currentProgramm" MinHeight="200" DockPanel.Dock="Top"></ListBox>
+                <DockPanel DockPanel.Dock="Right" Width="200" LastChildFill="False">
+                    <ListBox x:Name="CurrentProgramm" Height="200" DockPanel.Dock="Top" Style="{StaticResource ListWithCommands}"></ListBox>
                     <Button DockPanel.Dock="Top">Редактировать</Button>
+                    <ListBox x:Name="AllCommands" Height="200" DockPanel.Dock="Top" Style="{StaticResource ListWithCommands}"></ListBox>
+
                     <Button DockPanel.Dock="Bottom">Запустить</Button>
                 </DockPanel>
                 <Image></Image>

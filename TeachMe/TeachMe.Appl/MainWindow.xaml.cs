@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TeachMe.Appl.Exception;
 using TeachMe.Appl.Robot;
 using TeachMe.Domain;
 using TeachMe.Domain.Robot;
@@ -21,28 +22,58 @@ namespace TeachMe.Appl
     /// </summary>
     public partial class MainWindow : Window
     {
-        public AvailableCommands AvailableCommands;
-        //public ObservableCollection<CommandApp> CurrentCommands; 
-
-        //private CommandApp _dragged;
-
-        private GameModel _gameModel;
-
+        private readonly GameModel _gameModel;
+        private readonly AvailableCommands _availableCommands;
+        private readonly CurrentCommands _currentCommands;
+        
         public MainWindow()
         {
             InitializeComponent();
             
+            _gameModel = new GameModel(new MobileRobot(new Transform()), new Field(5, 5));
+            _availableCommands = new AvailableCommands(_gameModel.Robot);
+            _currentCommands = new CurrentCommands();
+
+            CurrentCommands.ItemsSource = _currentCommands.Commands;
+            AvailableCommands.ItemsSource = _availableCommands.Commands;
+
             MouseLeftButtonDown += (sender, args) => DragMove();
-            /*this.FoldingButton.Click +=
-                (sender, args) =>
-                    this.WindowState =
-                        this.WindowState == WindowState.Minimized ? WindowState.Normal : WindowState.Minimized;
-            this.MinimizedAndMaximizedButton.Click +=
-                (sender, args) =>
-                    this.WindowState =
-                        this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
-            this.ClosingButton.Click += (sender, args) => this.Close();*/
-            
+
+            AvailableCommands.PreviewMouseLeftButtonDown += (sender, e) =>
+            {
+                var command = GetCommandViewerInListBox(AvailableCommands, e);
+
+                DragDrop.DoDragDrop(AvailableCommands, command, DragDropEffects.Copy);
+            };
+
+            CurrentCommands.Drop += (sender, e) =>
+            {
+                if (!e.Data.GetDataPresent(typeof(CommandViewer)))
+                    return;
+
+                var draggedCommand = (CommandViewer)e.Data.GetData(typeof(CommandViewer));
+
+                if (!_currentCommands.Commands.Any())
+                {
+                    _currentCommands.Commands.Add(draggedCommand);
+
+                    return;
+                }
+
+                var hitCommand = GetCommandViewerInListBox(CurrentCommands, e);
+
+                if (hitCommand != null)
+                {
+                    var index = 0;
+
+                    _currentCommands.Commands.Insert(index, draggedCommand);
+                }
+                else
+                {
+                    _currentCommands.Commands.Add(draggedCommand);
+                }
+            };
+
             /*AllCommands.PreviewMouseLeftButtonDown += (sender, e) =>
             {
                 if (_dragged != null)
@@ -123,43 +154,58 @@ namespace TeachMe.Appl
                 }
             };*/
 
-            var robot = new MobileRobot(new Transform());
-            robot.Processor.Commands.AddRange(new Action[]
-            {
-                robot.Forward,
-                robot.Forward,
-                robot.Forward,
-                robot.Forward,
-                robot.Leftward,
-                robot.Forward,
-                robot.Forward,
-                robot.Forward,
-                robot.Forward,
-                robot.Leftward,
-                robot.Forward,
-                robot.Forward,
-                robot.Forward,
-                robot.Forward,
-                robot.Leftward,
-                robot.Forward,
-                robot.Forward,
-                robot.Forward,
-                robot.Forward,
-                robot.Leftward
-            });
-            
-            _gameModel = new GameModel(robot,
-                new Field(5, 5));
+            // Для верхних трех кнопочек
+            /*this.FoldingButton.Click +=
+                (sender, args) =>
+                    this.WindowState =
+                        this.WindowState == WindowState.Minimized ? WindowState.Normal : WindowState.Minimized;
+            this.MinimizedAndMaximizedButton.Click +=
+                (sender, args) =>
+                    this.WindowState =
+                        this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+            this.ClosingButton.Click += (sender, args) => this.Close();*/
 
-            AvailableCommands = new AvailableCommands(robot);
-            //CurrentCommands = new ObservableCollection<CommandApp>();
-
-            AllCommands.ItemsSource = AvailableCommands.Commands;
             //CurrentProgramm.ItemsSource = CurrentCommands;
 
-            // Нужно бы сделать класс который подкачивает все команды робота и записывает их в нужный лист бокс)
-            // Для верхнего листбокса убрать подсказки
+            // Для верхнего листбокса убрать подсказки создать новое свойство и пускай оно на все реагирует
             // Для нижнего оставить
+        }
+
+        private CommandViewer GetCommandViewerInListBox(ListBox listBox, MouseButtonEventArgs mouse)
+        {
+            return GetCommandViewerInListBox(listBox, mouse.GetPosition(listBox));
+        }
+        private CommandViewer GetCommandViewerInListBox(ListBox listBox, DragEventArgs element)
+        {
+            return GetCommandViewerInListBox(listBox, element.GetPosition(listBox));
+        }
+        private CommandViewer GetCommandViewerInListBox(ListBox listBox, Point checkedLocation)
+        {
+            var element = listBox.InputHitTest(checkedLocation) as UIElement;
+
+            while (element != null)
+            {
+                if (element is ListBoxItem)
+                {
+                    var listBoxItem = (ListBoxItem)element;
+
+                    if (!(listBoxItem.Content is CommandViewer))
+                    {
+                        throw new SearchCommandViewerInListBoxException();
+                    }
+
+                    var command = (CommandViewer)listBoxItem.Content;
+
+                    return command;
+                }
+
+                element = VisualTreeHelper.GetParent(element) as UIElement;
+
+                if (element is ListBox)
+                    return null;
+            }
+
+            return null;
         }
     }
 }

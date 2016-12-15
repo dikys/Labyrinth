@@ -58,8 +58,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Exception\SearchCommandViewerInListBoxException.cs" />
     <Compile Include="Robot\AvailableCommands.cs" />
     <Compile Include="Robot\CommandViewer.cs" />
+    <Compile Include="Robot\CurrentCommands.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

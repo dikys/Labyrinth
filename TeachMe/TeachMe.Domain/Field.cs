@@ -26,14 +26,14 @@ namespace TeachMe.Domain
                 }
             }
 
-            this.Sells = sells.AsReadOnly();
+            Sells = sells.AsReadOnly();
         }
         public Field(IReadOnlyList<IReadOnlyList<Sell>> sells)
         {
             if (sells == null)
                 throw new ArgumentNullException("sells");
 
-            this.Sells = sells;
+            Sells = sells;
         }
 
         public IReadOnlyList<IReadOnlyList<Sell>> Sells { get; }

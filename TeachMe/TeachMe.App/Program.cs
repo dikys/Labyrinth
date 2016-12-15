@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using TeachMe.Domain;
+using TeachMe.Domain.Robot;
 using TeachMe.Infrastructure;
 
 namespace TeachMe.App
@@ -10,7 +11,7 @@ namespace TeachMe.App
     {
         static void Main(string[] args)
         {
-            var robot = new Robot(new Transform());
+            var robot = new MobileRobot(new Transform());
             robot.Processor.Commands.AddRange(new Action[]
             {
                 robot.Forward,

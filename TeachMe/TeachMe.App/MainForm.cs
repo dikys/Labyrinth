@@ -15,7 +15,7 @@ namespace TeachMe.App
     {
         public MainForm(GameModel gameModel)
         {
-            this.GameModel = gameModel;
+            GameModel = gameModel;
 
             InitilizateMainPanel();
             InitilizateTopPanel();
@@ -23,7 +23,7 @@ namespace TeachMe.App
             
             this.Resize += (sender, args) =>
             {
-                this.Canvas.Invalidate();
+                Canvas.Invalidate();
             };
         }
         
@@ -35,25 +35,25 @@ namespace TeachMe.App
 
         private void InitilizateMainPanel()
         {
-            this.MainPanel = new TableLayoutPanel()
+            MainPanel = new TableLayoutPanel()
             {
                 Dock = DockStyle.Fill
             };
 
-            this.MainPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 20f));
-            this.MainPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 80f));
+            MainPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 20f));
+            MainPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 80f));
 
-            this.Controls.Add(this.MainPanel);
+            this.Controls.Add(MainPanel);
         }
 
         private void InitilizateTopPanel()
         {
-            this.TopPanel = new TableLayoutPanel()
+            TopPanel = new TableLayoutPanel()
             {
                 Dock = DockStyle.Fill
             };
-            this.TopPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
-            this.TopPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+            TopPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+            TopPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
 
             var buttonRun = new Button()
             {
@@ -62,7 +62,7 @@ namespace TeachMe.App
             };
             buttonRun.Click += (sender, args) =>
             {
-                this.GameModel.Robot.Processor.Reset();
+                GameModel.Robot.Processor.Reset();
 
                 var timer = new Timer()
                 {
@@ -70,44 +70,44 @@ namespace TeachMe.App
                 };
                 timer.Tick += (s, a) =>
                 {
-                    if (this.GameModel.Robot.Processor.IsFinish)
+                    if (GameModel.Robot.Processor.IsFinish)
                         timer.Stop();
 
-                    this.GameModel.Robot.Processor.RunNext();
-                    this.Canvas.Invalidate();
+                    GameModel.Robot.Processor.RunNext();
+                    Canvas.Invalidate();
                 };
                 timer.Start();
             };
-            this.TopPanel.Controls.Add(buttonRun, 0, 0);
+            TopPanel.Controls.Add(buttonRun, 0, 0);
 
             var buttonEdit = new Button()
             {
                 Dock = DockStyle.Fill,
                 Text = "Редактировать"
             };
-            this.TopPanel.Controls.Add(buttonEdit, 1, 0);
+            TopPanel.Controls.Add(buttonEdit, 1, 0);
 
-            this.MainPanel.Controls.Add(this.TopPanel, 0, 0);
+            MainPanel.Controls.Add(TopPanel, 0, 0);
         }
 
         private void InitilizateCanvas()
         {
-            this.Canvas = new PictureBox()
+            Canvas = new PictureBox()
             {
                 Dock = DockStyle.Fill,
                 BackColor = Color.White
             };
-            this.Canvas.Paint += (sender, args) =>
+            Canvas.Paint += (sender, args) =>
             {
                 var g = args.Graphics;
 
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 
-                g.TranslateTransform(0, this.Canvas.Height);
+                g.TranslateTransform(0, Canvas.Height);
                 g.ScaleTransform(1, -1);
 
-                var sellSize = new Size(this.Canvas.Width / this.GameModel.Field.Colums, this.Canvas.Height / this.GameModel.Field.Rows);
-                foreach (var rowSells in this.GameModel.Field.Sells)
+                var sellSize = new Size(Canvas.Width / GameModel.Field.Colums, Canvas.Height / GameModel.Field.Rows);
+                foreach (var rowSells in GameModel.Field.Sells)
                 {
                     foreach (var sell in rowSells)
                     {
@@ -119,19 +119,19 @@ namespace TeachMe.App
                     }
                 }
 
-                g.TranslateTransform(this.GameModel.Robot.Transform.Location.X * sellSize.Width + sellSize.Width / 2,
-                    this.GameModel.Robot.Transform.Location.Y * sellSize.Height + sellSize.Height / 2);
-                g.RotateTransform((int)this.GameModel.Robot.Transform.Rotation.Angle + 90);
-                g.DrawImage(TeachMe.App.Properties.Resources.Robot,
-                    this.GameModel.Robot.Transform.Rotation.Angle == Angles.Left
-                    || this.GameModel.Robot.Transform.Rotation.Angle == Angles.Right
+                g.TranslateTransform(GameModel.Robot.Transform.Location.X * sellSize.Width + sellSize.Width / 2,
+                    GameModel.Robot.Transform.Location.Y * sellSize.Height + sellSize.Height / 2);
+                g.RotateTransform((int)GameModel.Robot.Transform.Rotation.Angle + 90);
+                g.DrawImage(Properties.Resources.Robot,
+                    GameModel.Robot.Transform.Rotation.Angle == Angles.Left
+                    || GameModel.Robot.Transform.Rotation.Angle == Angles.Right
                         ? new Rectangle(-sellSize.Height / 2, -sellSize.Width / 2, sellSize.Height, sellSize.Width)
                         : new Rectangle(-sellSize.Width / 2, -sellSize.Height / 2, sellSize.Width, sellSize.Height));
 
                 g.ResetTransform();
             };
 
-            this.MainPanel.Controls.Add(this.Canvas, 0, 1);
+            MainPanel.Controls.Add(Canvas, 0, 1);
         }
     }
 }

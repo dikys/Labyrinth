@@ -9,7 +9,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TeachMe.Appl.Robot;
 using TeachMe.Domain;
+using TeachMe.Domain.Robot;
 using Transform = TeachMe.Infrastructure.Transform;
 
 namespace TeachMe.Appl
@@ -19,10 +21,10 @@ namespace TeachMe.Appl
     /// </summary>
     public partial class MainWindow : Window
     {
-        public ObservableCollection<Command> RobotCommands;
-        public ObservableCollection<Command> CurrentCommands; 
+        public AvailableCommands AvailableCommands;
+        //public ObservableCollection<CommandApp> CurrentCommands; 
 
-        private Command _dragged;
+        //private CommandApp _dragged;
 
         private GameModel _gameModel;
 
@@ -30,7 +32,7 @@ namespace TeachMe.Appl
         {
             InitializeComponent();
             
-            this.MouseLeftButtonDown += (sender, args) => this.DragMove();
+            MouseLeftButtonDown += (sender, args) => DragMove();
             /*this.FoldingButton.Click +=
                 (sender, args) =>
                     this.WindowState =
@@ -41,12 +43,12 @@ namespace TeachMe.Appl
                         this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
             this.ClosingButton.Click += (sender, args) => this.Close();*/
             
-            this.AllCommands.PreviewMouseLeftButtonDown += (sender, e) =>
+            /*AllCommands.PreviewMouseLeftButtonDown += (sender, e) =>
             {
-                if (this._dragged != null)
+                if (_dragged != null)
                     return;
 
-                var element = this.AllCommands.InputHitTest(e.GetPosition(this.AllCommands)) as UIElement;
+                var element = AllCommands.InputHitTest(e.GetPosition(AllCommands)) as UIElement;
 
                 while (element != null)
                 {
@@ -54,39 +56,14 @@ namespace TeachMe.Appl
                     {
                         var item = (ListBoxItem) element;
 
-                        if (!(item.Content is Command))
+                        if (!(item.Content is CommandApp))
                             return;
 
-                        var command = (Command)item.Content;
+                        var command = (CommandApp)item.Content;
 
-                        this._dragged = command;
+                        _dragged = command;
 
-                        /*var grid = (Grid) item.Content;
-                        
-                        var textBlockWithIndex = grid.Children[1] as TextBlock;
-
-                        if (textBlockWithIndex == null)
-                            throw new NullReferenceException("textBlockWithIndex");
-
-                        int index;
-                        if (!Int32.TryParse(textBlockWithIndex.Text, out index))
-                            throw new FormatException();
-
-                        MessageBox.Show(index.ToString());
-
-                        return;*/
-
-                        /*var rectangle = (ListBoxItem) element;
-
-                        this._dragged = new Rectangle()
-                        {
-                            Width = rectangle.Width,
-                            Height = rectangle.Height
-                        };
-                        
-                        DragDrop.DoDragDrop(this._dragged, this._dragged, DragDropEffects.Move);
-
-                        break;*/
+                        DragDrop.DoDragDrop(item, command, DragDropEffects.Copy);
                     }
 
                     element = VisualTreeHelper.GetParent(element) as UIElement;
@@ -96,30 +73,57 @@ namespace TeachMe.Appl
                 }
             };
             
-            this.CurrentProgramm.Drop += (sender, e) =>
+            CurrentProgramm.Drop += (sender, e) =>
             {
-                //this.CurrentCommands.Add(this._dragged);
-                this._dragged = null;
+                _dragged = null;
 
-                if (!this.CurrentCommands.Any())
+                if (!e.Data.GetDataPresent(typeof (CommandApp)))
                     return;
+
+                var draggedCommand = (CommandApp) e.Data.GetData(typeof(CommandApp));
                 
-                var element = AllCommands.InputHitTest(e.GetPosition(this.CurrentProgramm)) as UIElement;
-                
+                if (!CurrentCommands.Any())
+                {
+                    CurrentCommands.Add(draggedCommand);
+
+                    return;
+                }
+
+                var element = CurrentProgramm.InputHitTest(e.GetPosition(CurrentProgramm)) as UIElement;
+                CommandApp hitCommandApp = null;
+
                 while (element != null)
                 {
-                    if (element is Rectangle)
+                    if (element is ListBoxItem)
                     {
-                        var rectangle = (Rectangle)element;
-                        
-                        break;
+                        var item = (ListBoxItem)element;
+
+                        if (!(item.Content is CommandApp))
+                            return;
+
+                        hitCommandApp = (CommandApp)item.Content;
                     }
 
                     element = VisualTreeHelper.GetParent(element) as UIElement;
-                }
-            };
 
-            var robot = new Robot(new Transform());
+                    if (element is ListBox)
+                        break;
+                }
+
+                if (hitCommandApp != null)
+                {
+                    MessageBox.Show(CurrentCommands.IndexOf(hitCommandApp).ToString());
+
+                    CurrentCommands.Insert(CurrentCommands.IndexOf(hitCommandApp),
+                        draggedCommand);
+                }
+                else
+                {
+                    CurrentCommands.Add(draggedCommand);
+                }
+            };*/
+
+            var robot = new MobileRobot(new Transform());
             robot.Processor.Commands.AddRange(new Action[]
             {
                 robot.Forward,
@@ -144,28 +148,18 @@ namespace TeachMe.Appl
                 robot.Leftward
             });
             
-            this._gameModel = new GameModel(robot,
+            _gameModel = new GameModel(robot,
                 new Field(5, 5));
-            
-            this.RobotCommands = new ObservableCollection<Command>
-            {
-                new Command(0,
-                    "Вперед",
-                    "Двигаться на 1 клетку вперед",
-                    new BitmapImage(new Uri("CommandImages/Forward.png", UriKind.Relative)),
-                    robot.Forward),
-                new Command(1,
-                    "Назад",
-                    "Двигаться на 1 клетку назад",
-                    new BitmapImage(new Uri("CommandImages/Backward.png", UriKind.Relative)),
-                    robot.Forward)
-            };
-            this.CurrentCommands = new ObservableCollection<Command>();
 
-            this.AllCommands.ItemsSource = this.RobotCommands;
-            this.CurrentProgramm.ItemsSource = this.CurrentCommands;
+            AvailableCommands = new AvailableCommands(robot);
+            //CurrentCommands = new ObservableCollection<CommandApp>();
+
+            AllCommands.ItemsSource = AvailableCommands.Commands;
+            //CurrentProgramm.ItemsSource = CurrentCommands;
 
             // Нужно бы сделать класс который подкачивает все команды робота и записывает их в нужный лист бокс)
+            // Для верхнего листбокса убрать подсказки
+            // Для нижнего оставить
         }
     }
 }

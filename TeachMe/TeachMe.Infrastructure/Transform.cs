@@ -10,19 +10,19 @@ namespace TeachMe.Infrastructure
     {
         public Transform (Location location = new Location(), Rotation rotation = new Rotation())
         {
-            this.Location = location;
-            this.Rotation = rotation;
+            Location = location;
+            Rotation = rotation;
         }
 
         public Location Location { get; }
         public Rotation Rotation { get; }
-        public Location Forward => this.Rotation.GetForward();
+        public Location Forward => Rotation.GetForward();
 
         #region value semantics
 
         public Transform Rotate(int angle)
         {
-            return new Transform(this.Location, this.Rotation + angle);
+            return new Transform(Location, Rotation + angle);
         }
 
         public static Transform operator +(Transform left, Location right)
@@ -37,14 +37,14 @@ namespace TeachMe.Infrastructure
 
         private bool Equals(Transform other)
         {
-            return this.Location.Equals(other.Location) && this.Rotation.Equals(other.Rotation);
+            return Location.Equals(other.Location) && Rotation.Equals(other.Rotation);
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (this.GetType() != obj.GetType()) return false;
+            if (GetType() != obj.GetType()) return false;
 
             return Equals((Transform)obj);
         }

@@ -10,8 +10,8 @@ namespace TeachMe.Infrastructure
     {
         public Location(int x = 0, int y = 0)
         {
-            this.X = x;
-            this.Y = y;
+            X = x;
+            Y = y;
         }
 
         public int X { get; }
@@ -31,14 +31,14 @@ namespace TeachMe.Infrastructure
 
         private bool Equals(Location other)
         {
-            return this.X == other.X && this.Y == other.Y;
+            return X == other.X && Y == other.Y;
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (this.GetType() != obj.GetType()) return false;
+            if (GetType() != obj.GetType()) return false;
 
             return Equals((Location)obj);
         }

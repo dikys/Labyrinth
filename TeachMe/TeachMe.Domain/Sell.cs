@@ -11,7 +11,7 @@ namespace TeachMe.Domain
     {
         public Sell(Location location)
         {
-            this.Location = location;
+            Location = location;
         }
 
         public Location Location { get; private set; }

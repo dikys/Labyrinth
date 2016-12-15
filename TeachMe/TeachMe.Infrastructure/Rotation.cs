@@ -12,18 +12,18 @@ namespace TeachMe.Infrastructure
     {
         public Rotation (Angles angle)
         {
-            this.Angle = angle;
+            Angle = angle;
         }
 
         public Angles Angle { get; }
 
         public Location GetForward ()
         {
-            if (this.Angle == Angles.Right)
+            if (Angle == Angles.Right)
                 return new Location(1, 0);
-            else if (this.Angle == Angles.Up)
+            else if (Angle == Angles.Up)
                 return new Location(0, 1);
-            else if (this.Angle == Angles.Left)
+            else if (Angle == Angles.Left)
                 return new Location(-1, 0);
             else
                 return new Location(0, -1);
@@ -63,14 +63,14 @@ namespace TeachMe.Infrastructure
 
         private bool Equals(Rotation other)
         {
-            return this.Angle == other.Angle;
+            return Angle == other.Angle;
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (this.GetType() != obj.GetType()) return false;
+            if (GetType() != obj.GetType()) return false;
             
             return Equals((Rotation)obj);
         }

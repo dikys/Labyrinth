@@ -40,12 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Robot\Command.cs" />
     <Compile Include="Field.cs" />
     <Compile Include="GameModel.cs" />
-    <Compile Include="Processors\MicroProcessor.cs" />
+    <Compile Include="MicroProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Robots\Robot.cs" />
-    <Compile Include="Robots\RobotCommandInfoAttribute.cs" />
+    <Compile Include="Robot\MobileRobot.cs" />
+    <Compile Include="Robot\CommandInfoAttribute.cs" />
     <Compile Include="Sell.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -12,7 +12,7 @@ namespace TeachMe.App
     {
         public RedactorWindow(GameModel gameModel)
         {
-            this.GameModel = gameModel;
+            GameModel = gameModel;
 
             InitilizateMainPanel();
             InitilizateLeftPanel();
@@ -25,15 +25,15 @@ namespace TeachMe.App
 
         private void InitilizateMainPanel()
         {
-            this.MainPanel = new TableLayoutPanel()
+            MainPanel = new TableLayoutPanel()
             {
                 Dock = DockStyle.Fill
             };
 
-            this.MainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 60f));
-            this.MainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40f));
+            MainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 60f));
+            MainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40f));
 
-            this.Controls.Add(this.MainPanel);
+            this.Controls.Add(MainPanel);
         }
 
         private void InitilizateLeftPanel()

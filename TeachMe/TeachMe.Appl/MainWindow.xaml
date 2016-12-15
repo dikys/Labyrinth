@@ -8,71 +8,27 @@
         Title="MainWindow"
         Height="586.972"
         Width="903.411"
-        AllowsTransparency="False"
-        WindowStyle="None"
-        ResizeMode="CanResizeWithGrip"
-        Background="#FF32CD32">
+        Style="{DynamicResource DefaultStyleWindow}">
     <Window.Resources>
-        <SolidColorBrush x:Key="MainBackgroundColor" Color="#FF32CD32"></SolidColorBrush>
-        <SolidColorBrush x:Key="MainForegroundColor" Color="#FF000000"></SolidColorBrush>
-        <ControlTemplate x:Key="ButtonTemplate" TargetType="Button">
-            <Border x:Name="buttonBorder"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                Background="{TemplateBinding Background}"
-                                Height="{TemplateBinding Height}"
-                                Width="{TemplateBinding Width}">
-                <ContentControl Margin="{TemplateBinding Padding}"
-                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                    Content="{TemplateBinding Content}" />
-            </Border>
-        </ControlTemplate>
-        <Style TargetType="Button">
-            <Style.Setters>
-                <Setter Property="Cursor" Value="Hand"/>
-                <Setter Property="Background" Value="{StaticResource MainBackgroundColor}"/>
-                <Setter Property="Foreground" Value="{StaticResource MainForegroundColor}"/>
-                <Setter Property="Padding" Value="15"></Setter>
-                <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="Template" Value="{StaticResource ButtonTemplate}"/>
-            </Style.Setters>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="DeepPink"></Setter>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-        <Style x:Key="TopToolButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-            <Setter Property="Padding" Value="0"></Setter>
-            <Setter Property="DockPanel.Dock" Value="Right"/>
-            <Setter Property="Width" Value="32"/>
-            <Setter Property="Height" Value="25"/>
-        </Style>
-        <Style x:Key="ListWithCommands" TargetType="ListBox">
-            <Style.Setters>
-                <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"></Setter>
-                <Setter Property="ItemsPanel">
-                    <Setter.Value>
-                        <ItemsPanelTemplate>
-                            <WrapPanel />
-                        </ItemsPanelTemplate>
-                    </Setter.Value>
-                </Setter>
-                <Setter Property="ItemTemplate">
-                    <Setter.Value>
-                        <DataTemplate>
-                            <Rectangle Width="40" Height="40" Fill="Bisque"></Rectangle>
-                        </DataTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style.Setters>
-        </Style>
     </Window.Resources>
     <Grid x:Name="MainGrid">
-        <Border Width="auto" Height="auto" BorderBrush="LimeGreen" Background="#101010" BorderThickness="2">
-            <DockPanel LastChildFill="True">
-                <DockPanel DockPanel.Dock="Top" LastChildFill="True">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="204"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Canvas Grid.Column="0">
+        </Canvas>
+        
+        <DockPanel Grid.Column="1" LastChildFill="False">
+            <ListBox x:Name="CurrentProgramm" AllowDrop="True" Style="{StaticResource ListWithCommands}"></ListBox>
+            <Button DockPanel.Dock="Top">Редактировать</Button>
+            <ListBox x:Name="AllCommands" Style="{StaticResource ListWithCommands}"></ListBox>
+            <Button DockPanel.Dock="Bottom">Запустить</Button>
+        </DockPanel>
+
+        <!--<DockPanel LastChildFill="True">
+            <DockPanel DockPanel.Dock="Top" LastChildFill="True">
                     <Button x:Name="ClosingButton" Style="{StaticResource TopToolButton}">
                         <Canvas Margin="-6">
                             <Line X1="0" Y1="0" X2="12" Y2="12" Stroke="Black" StrokeThickness="1" />
@@ -92,15 +48,12 @@
                     </Button>
                     <TextBlock Text="Визуальное программирование робота." Foreground="White"/>
                 </DockPanel>
-                <DockPanel DockPanel.Dock="Right" Width="200" LastChildFill="False">
-                    <ListBox x:Name="CurrentProgramm" Height="200" DockPanel.Dock="Top" Style="{StaticResource ListWithCommands}"></ListBox>
-                    <Button DockPanel.Dock="Top">Редактировать</Button>
-                    <ListBox x:Name="AllCommands" Height="200" DockPanel.Dock="Top" Style="{StaticResource ListWithCommands}"></ListBox>
-
-                    <Button DockPanel.Dock="Bottom">Запустить</Button>
-                </DockPanel>
-                <Image></Image>
+            <DockPanel DockPanel.Dock="Right" Width="200" LastChildFill="False">
+                <ListBox x:Name="CurrentProgramm" Height="200" DockPanel.Dock="Top" AllowDrop="True" Style="{StaticResource ListWithCommands}"></ListBox>
+                <Button DockPanel.Dock="Top">Редактировать</Button>
+                <ListBox x:Name="AllCommands" Height="200" DockPanel.Dock="Top" Style="{StaticResource ListWithCommands}"></ListBox>
+                <Button DockPanel.Dock="Bottom">Запустить</Button>
             </DockPanel>
-        </Border>
+        </DockPanel>-->
     </Grid>
 </Window>

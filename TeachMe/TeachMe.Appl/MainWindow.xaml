@@ -17,7 +17,7 @@
             <ColumnDefinition Width="204"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <Canvas Grid.Column="0">
+        <Canvas x:Name="MainCanvas" Grid.Column="0">
         </Canvas>
 
         <DockPanel Grid.Column="1" LastChildFill="False">

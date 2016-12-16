@@ -9,18 +9,17 @@ namespace TeachMe.Domain
 {
     public class Field
     {
-        public Field(int rows, int columns)
+        public Field(int size)
         {
-            IsNegative(rows);
-            IsNegative(columns);
+            IsNegative(size);
             
             var sells = new List<List<Sell>>();
 
-            for (var x = 0; x < columns; x++)
+            for (var x = 0; x < size; x++)
             {
                 sells.Add(new List<Sell>());
 
-                for (var y = 0; y < rows; y++)
+                for (var y = 0; y < size; y++)
                 {
                     sells[x].Add(new Sell(new Location(x, y)));
                 }

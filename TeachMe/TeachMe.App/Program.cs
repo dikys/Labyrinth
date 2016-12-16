@@ -37,7 +37,7 @@ namespace TeachMe.App
             });
 
             var gameModel = new GameModel(robot,
-                new Field(5, 5));
+                new Field(5));
             
             Application.Run(new MainForm(gameModel));
         }

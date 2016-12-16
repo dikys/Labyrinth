@@ -15,6 +15,16 @@ using TeachMe.Domain;
 using TeachMe.Domain.Robot;
 using Transform = TeachMe.Infrastructure.Transform;
 
+/*
+ * Пожелания:
+ * 
+ * Создать экран загрузки! (не важно)
+ * 
+ * Сделать цель на уровне
+ * 
+ * Сделать несколько уровней! 
+ */
+
 namespace TeachMe.Appl
 {
     /// <summary>
@@ -22,20 +32,13 @@ namespace TeachMe.Appl
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly GameModel _gameModel;
-        private readonly AvailableCommands _availableCommands;
-        private readonly CurrentCommands _currentCommands;
+        public GameModelViewer gameModelViewer;
         
         public MainWindow()
         {
             InitializeComponent();
-            
-            _gameModel = new GameModel(new MobileRobot(new Transform()), new Field(5, 5));
-            _availableCommands = new AvailableCommands(_gameModel.Robot);
-            _currentCommands = new CurrentCommands();
 
-            CurrentCommands.ItemsSource = _currentCommands.Commands;
-            AvailableCommands.ItemsSource = _availableCommands.Commands;
+            gameModelViewer = new GameModelViewer(new GameModel(new MobileRobot(), new Field(5)), CurrentCommands, AvailableCommands);
 
             MouseLeftButtonDown += (sender, args) => DragMove();
             
@@ -56,7 +59,7 @@ namespace TeachMe.Appl
                 if (command == null)
                     return;
 
-                _currentCommands.Commands.RemoveAt(_currentCommands.Commands.IndexOf(command));
+                gameModelViewer.CurrentCommands.RemoveAt(gameModelViewer.CurrentCommands.IndexOf(command));
 
                 DragDrop.DoDragDrop(CurrentCommands, command, DragDropEffects.Move);
             };
@@ -68,9 +71,9 @@ namespace TeachMe.Appl
 
                 var draggedCommand = (CommandViewer)args.Data.GetData(typeof(CommandViewer));
 
-                if (!_currentCommands.Commands.Any())
+                if (!gameModelViewer.CurrentCommands.Any())
                 {
-                    _currentCommands.Commands.Add(new CommandViewer(draggedCommand));
+                    gameModelViewer.CurrentCommands.Add(new CommandViewer(draggedCommand));
 
                     return;
                 }
@@ -79,11 +82,11 @@ namespace TeachMe.Appl
 
                 if (hitCommand != null)
                 {
-                    _currentCommands.Commands.Insert(_currentCommands.Commands.IndexOf(hitCommand), new CommandViewer(draggedCommand));
+                    gameModelViewer.CurrentCommands.Insert(gameModelViewer.CurrentCommands.IndexOf(hitCommand), new CommandViewer(draggedCommand));
                 }
                 else
                 {
-                    _currentCommands.Commands.Add(new CommandViewer(draggedCommand));
+                    gameModelViewer.CurrentCommands.Add(new CommandViewer(draggedCommand));
                 }
             };
 
@@ -99,9 +102,6 @@ namespace TeachMe.Appl
             this.ClosingButton.Click += (sender, args) => this.Close();*/
 
             //CurrentProgramm.ItemsSource = CurrentCommands;
-
-            // Для верхнего листбокса убрать подсказки создать новое свойство и пускай оно на все реагирует
-            // Для нижнего оставить
         }
 
         private CommandViewer GetCommandViewerInListBox(ListBox listBox, MouseButtonEventArgs mouse)

@@ -25,6 +25,8 @@ namespace TeachMe.Appl
         private readonly GameModel _gameModel;
         private readonly AvailableCommands _availableCommands;
         private readonly CurrentCommands _currentCommands;
+
+        private Grid draggedCommandGrid;
         
         public MainWindow()
         {
@@ -39,19 +41,37 @@ namespace TeachMe.Appl
 
             MouseLeftButtonDown += (sender, args) => DragMove();
 
-            AvailableCommands.PreviewMouseLeftButtonDown += (sender, e) =>
+            MouseMove += (sender, args) =>
             {
-                var command = GetCommandViewerInListBox(AvailableCommands, e);
+                if (draggedCommandGrid == null)
+                    return;
+                // ОШИБКА
+                draggedCommandGrid. = args.GetPosition((IInputElement)sender);
+            };
+
+            AvailableCommands.PreviewMouseLeftButtonDown += (sender, args) =>
+            {
+                var command = GetCommandViewerInListBox(AvailableCommands, args);
 
                 if (command == null)
                     return;
 
+                var draggedCommandImage = new Image
+                {
+                    Source = command.Icon,
+                    Width = 50,
+                    Height = 50
+                };
+
+                draggedCommandGrid = new Grid();
+                draggedCommandGrid.Children.Add(draggedCommandImage);
+                
                 DragDrop.DoDragDrop(AvailableCommands, command, DragDropEffects.Copy);
             };
 
-            CurrentCommands.PreviewMouseLeftButtonDown += (sender, e) =>
+            CurrentCommands.PreviewMouseLeftButtonDown += (sender, args) =>
             {
-                var command = GetCommandViewerInListBox(CurrentCommands, e);
+                var command = GetCommandViewerInListBox(CurrentCommands, args);
 
                 if (command == null)
                     return;
@@ -61,12 +81,12 @@ namespace TeachMe.Appl
                 DragDrop.DoDragDrop(CurrentCommands, command, DragDropEffects.Move);
             };
 
-            CurrentCommands.Drop += (sender, e) =>
+            CurrentCommands.Drop += (sender, args) =>
             {
                 if (!e.Data.GetDataPresent(typeof(CommandViewer)))
                     return;
 
-                var draggedCommand = (CommandViewer)e.Data.GetData(typeof(CommandViewer));
+                var draggedCommand = (CommandViewer)args.Data.GetData(typeof(CommandViewer));
 
                 if (!_currentCommands.Commands.Any())
                 {
@@ -75,7 +95,7 @@ namespace TeachMe.Appl
                     return;
                 }
 
-                var hitCommand = GetCommandViewerInListBox(CurrentCommands, e);
+                var hitCommand = GetCommandViewerInListBox(CurrentCommands, args);
 
                 if (hitCommand != null)
                 {

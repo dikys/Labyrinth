@@ -117,10 +117,10 @@
     <Resource Include="Robot\CommandImages\Forward.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Robot\CommandCursors\Backward.cur" />
+    <Resource Include="Robot\CommandImages\Leftward.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Robot\CommandCursors\Forward.cur" />
+    <Resource Include="Robot\CommandImages\Rightward.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

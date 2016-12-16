@@ -75,7 +75,7 @@ namespace TeachMe.Domain.Robot
         }
 
         [CommandInfo(Name = "Направо", Description = "Повернуться на 90 против часовой")]
-        public void Rigthward()
+        public void Rightward()
         {
             Transform = Transform.Rotate(-90);
         }

@@ -21,9 +21,12 @@
         </Canvas>
 
         <DockPanel Grid.Column="1" LastChildFill="False">
-            <ListBox x:Name="CurrentCommands" AllowDrop="True" Style="{StaticResource ListWithCommands}" ItemTemplate="{StaticResource ItemTemplateWithoutToolTip}"></ListBox>
-            <Button DockPanel.Dock="Top">Редактировать</Button>
-            <ListBox x:Name="AvailableCommands" Style="{StaticResource ListWithCommands}"></ListBox>
+            <Label DockPanel.Dock="Top" HorizontalAlignment="Center" FontSize="20">Текущая программа</Label>
+            <ListBox x:Name="CurrentCommands" AllowDrop="True" DockPanel.Dock="Top" Style="{StaticResource ListWithCommands}"></ListBox>
+
+            <Label DockPanel.Dock="Top" HorizontalAlignment="Center" FontSize="20">Доступные команды</Label>
+            <ListBox x:Name="AvailableCommands" DockPanel.Dock="Top" Style="{StaticResource ListWithCommands}" ItemTemplate="{StaticResource CommandItemTemplateWithDescription}"></ListBox>
+            
             <Button DockPanel.Dock="Bottom">Запустить</Button>
         </DockPanel>
     </Grid>

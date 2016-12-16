@@ -71,22 +71,22 @@ namespace TeachMe.DomainTest
             var robot = new MobileRobot(new Transform(new Location(), new Rotation(Angles.Right)));
             TestProgramm(robot,
                 (r) => r.Transform.Equals(new Transform(new Location(), new Rotation(Angles.Down))),
-                robot.Rigthward);
+                robot.Rightward);
 
             robot = new MobileRobot(new Transform(new Location(), new Rotation(Angles.Up)));
             TestProgramm(robot,
                 (r) => r.Transform.Equals(new Transform(new Location(), new Rotation(Angles.Right))),
-                robot.Rigthward);
+                robot.Rightward);
 
             robot = new MobileRobot(new Transform(new Location(), new Rotation(Angles.Left)));
             TestProgramm(robot,
                 (r) => r.Transform.Equals(new Transform(new Location(), new Rotation(Angles.Up))),
-                robot.Rigthward);
+                robot.Rightward);
 
             robot = new MobileRobot(new Transform(new Location(), new Rotation(Angles.Down)));
             TestProgramm(robot,
                 (r) => r.Transform.Equals(new Transform(new Location(), new Rotation(Angles.Left))),
-                robot.Rigthward);
+                robot.Rightward);
         }
 
         [TestMethod]

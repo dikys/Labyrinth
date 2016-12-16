@@ -59,18 +59,23 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
-        <DataTemplate x:Key="ItemTemplateWithoutToolTip" DataType="robot:CommandViewer">
-            <Grid>
+    
+        <DataTemplate x:Key="CommandItemTemplate" DataType="robot:CommandViewer">
+            <Grid Cursor="Hand">
                 <Image Source="{Binding Path=Icon}" Stretch="Fill"></Image>
             </Grid>
         </DataTemplate>
+        <DataTemplate x:Key="CommandItemTemplateWithDescription" DataType="robot:CommandViewer">
+            <Grid Cursor="Hand" ToolTip="{Binding Path = Command.Attributes.Description}">
+                <Image Source="{Binding Path=Icon}" Stretch="Fill"></Image>
+            </Grid>
+        </DataTemplate>
+        
         <Style x:Key="ListWithCommands" TargetType="ListBox">
             <Style.Setters>
                 <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
                 <Setter Property="SelectionMode" Value="Single"/>
                 <Setter Property="Height" Value="200"/>
-                <Setter Property="DockPanel.Dock" Value="Top"/>
                 <Setter Property="Padding" Value="0"/>
                 <Setter Property="Background" Value="#FFFAD5"/>
                 <Setter Property="ItemsPanel">
@@ -121,15 +126,7 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-                <Setter Property="ItemTemplate">
-                    <Setter.Value>
-                        <DataTemplate DataType="robot:CommandViewer">
-                            <Grid ToolTip="{Binding Path = Command.Attributes.Description}">
-                                <Image Source="{Binding Path=Icon}" Stretch="Fill"></Image>
-                            </Grid>
-                        </DataTemplate>
-                    </Setter.Value>
-                </Setter>
+                <Setter Property="ItemTemplate" Value="{StaticResource CommandItemTemplate}"/>
             </Style.Setters>
         </Style>
 

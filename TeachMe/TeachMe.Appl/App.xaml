@@ -8,6 +8,8 @@
              xmlns:s="clr-namespace:System;assembly=mscorlib"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        <s:Double x:Key="CommandIconSize">50</s:Double>
+        
         <Style x:Key="DefaultStyleWindow" TargetType="{x:Type Window}">
             <Setter Property="WindowStyle" Value="None"/>
             <Setter Property="AllowsTransparency" Value="True"/>
@@ -81,8 +83,8 @@
                 <Setter Property="ItemContainerStyle">
                     <Setter.Value>
                         <Style TargetType="ListBoxItem">
-                            <Setter Property="Width" Value="50"/>
-                            <Setter Property="Height" Value="50"/>
+                            <Setter Property="Width" Value="{StaticResource CommandIconSize}"/>
+                            <Setter Property="Height" Value="{StaticResource CommandIconSize}"/>
                             <Setter Property="Margin" Value="0"/>
                             <Setter Property="Padding" Value="0"/>
                         </Style>

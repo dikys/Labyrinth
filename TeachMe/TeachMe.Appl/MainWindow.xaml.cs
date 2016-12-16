@@ -46,7 +46,7 @@ namespace TeachMe.Appl
                 if (draggedCommandGrid == null)
                     return;
                 // ОШИБКА
-                draggedCommandGrid. = args.GetPosition((IInputElement)sender);
+                //draggedCommandGrid. = args.GetPosition((IInputElement)sender);
             };
 
             AvailableCommands.PreviewMouseLeftButtonDown += (sender, args) =>
@@ -76,14 +76,14 @@ namespace TeachMe.Appl
                 if (command == null)
                     return;
 
-                _currentCommands.Commands.RemoveAt(command.Index);
+                _currentCommands.Commands.RemoveAt(_currentCommands.Commands.IndexOf(command));
 
                 DragDrop.DoDragDrop(CurrentCommands, command, DragDropEffects.Move);
             };
 
             CurrentCommands.Drop += (sender, args) =>
             {
-                if (!e.Data.GetDataPresent(typeof(CommandViewer)))
+                if (!args.Data.GetDataPresent(typeof(CommandViewer)))
                     return;
 
                 var draggedCommand = (CommandViewer)args.Data.GetData(typeof(CommandViewer));
@@ -99,7 +99,7 @@ namespace TeachMe.Appl
 
                 if (hitCommand != null)
                 {
-                    _currentCommands.Commands.Insert(hitCommand.Index, new CommandViewer(draggedCommand));
+                    _currentCommands.Commands.Insert(_currentCommands.Commands.IndexOf(hitCommand), new CommandViewer(draggedCommand));
                 }
                 else
                 {

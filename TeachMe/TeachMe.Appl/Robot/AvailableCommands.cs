@@ -8,7 +8,7 @@ namespace TeachMe.Appl.Robot
     {
         public AvailableCommands(MobileRobot robot)
         {
-            Commands = robot.Commands.Select((command, index) => new CommandViewer(command, index)).ToList();
+            Commands = robot.Commands.Select((command) => new CommandViewer(command)).ToList();
         }
 
         public List<CommandViewer> Commands { get; }

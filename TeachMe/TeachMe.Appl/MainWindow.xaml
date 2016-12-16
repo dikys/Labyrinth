@@ -17,6 +17,10 @@
             <ColumnDefinition Width="204"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
+        <Grid Visibility="Visible">
+            <Image Width="{StaticResource CommandIconSize}" Height="{StaticResource CommandIconSize}" Stretch="Fill"></Image>
+        </Grid>
+
         <Canvas Grid.Column="0">
         </Canvas>
         

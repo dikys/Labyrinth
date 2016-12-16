@@ -27,7 +27,7 @@
             <Label DockPanel.Dock="Top" HorizontalAlignment="Center" FontSize="20">Доступные команды</Label>
             <ListBox x:Name="AvailableCommands" DockPanel.Dock="Top" Style="{StaticResource ListWithCommands}" ItemTemplate="{StaticResource CommandItemTemplateWithDescription}"></ListBox>
             
-            <Button DockPanel.Dock="Bottom">Запустить</Button>
+            <Button x:Name="RunProgramm" DockPanel.Dock="Bottom">Запустить</Button>
         </DockPanel>
     </Grid>
 </Window>

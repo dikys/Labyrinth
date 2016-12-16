@@ -59,8 +59,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Exception\SearchCommandViewerInListBoxException.cs" />
-    <Compile Include="GameModelViewer.cs" />
-    <Compile Include="Robot\CommandViewer.cs" />
+    <Compile Include="Game\GameModelViewer.cs" />
+    <Compile Include="Game\Robot\Command\CommandViewer.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -112,14 +112,20 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Robot\CommandImages\Backward.png" />
-    <Resource Include="Robot\CommandImages\Forward.png" />
+    <Resource Include="Game\Robot\Command\Icons\Backward.png" />
+    <Resource Include="Game\Robot\Command\Icons\Forward.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Robot\CommandImages\Leftward.png" />
+    <Resource Include="Game\Robot\Command\Icons\Leftward.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Robot\CommandImages\Rightward.png" />
+    <Resource Include="Game\Robot\Command\Icons\Rightward.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Game\DefaultSell.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Game\Robot\Robot.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

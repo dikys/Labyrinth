@@ -10,13 +10,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using TeachMe.Appl.Exception;
-using TeachMe.Appl.Robot;
+using TeachMe.Appl.Game;
+using TeachMe.Appl.Game.Robot.Command;
 using TeachMe.Domain;
 using TeachMe.Domain.Robot;
+using TeachMe.Infrastructure;
 using Transform = TeachMe.Infrastructure.Transform;
 
 /*
  * Пожелания:
+ * 
+ * Разные типы ячеек нужны
  * 
  * Создать экран загрузки! (не важно)
  * 
@@ -32,13 +36,24 @@ namespace TeachMe.Appl
     /// </summary>
     public partial class MainWindow : Window
     {
-        public GameModelViewer gameModelViewer;
+        public GameModelViewer GameModelViewer;
         
         public MainWindow()
         {
             InitializeComponent();
 
-            gameModelViewer = new GameModelViewer(new GameModel(new MobileRobot(), new Field(5)), CurrentCommands, AvailableCommands);
+            Loaded += (sender, args) =>
+            {
+                GameModelViewer = new GameModelViewer(new GameModel(new MobileRobot(new Transform(new Location(1, 1))), new Field(5)),
+                    MainCanvas,
+                    CurrentCommands,
+                    AvailableCommands);
+            };
+
+            RunProgramm.Click += (sender, args) =>
+            {
+                GameModelViewer.RunProgramm();
+            };
 
             MouseLeftButtonDown += (sender, args) => DragMove();
             
@@ -59,7 +74,7 @@ namespace TeachMe.Appl
                 if (command == null)
                     return;
 
-                gameModelViewer.CurrentCommands.RemoveAt(gameModelViewer.CurrentCommands.IndexOf(command));
+                GameModelViewer.CurrentCommands.RemoveAt(GameModelViewer.CurrentCommands.IndexOf(command));
 
                 DragDrop.DoDragDrop(CurrentCommands, command, DragDropEffects.Move);
             };
@@ -71,9 +86,9 @@ namespace TeachMe.Appl
 
                 var draggedCommand = (CommandViewer)args.Data.GetData(typeof(CommandViewer));
 
-                if (!gameModelViewer.CurrentCommands.Any())
+                if (!GameModelViewer.CurrentCommands.Any())
                 {
-                    gameModelViewer.CurrentCommands.Add(new CommandViewer(draggedCommand));
+                    GameModelViewer.CurrentCommands.Add(new CommandViewer(draggedCommand));
 
                     return;
                 }
@@ -82,11 +97,11 @@ namespace TeachMe.Appl
 
                 if (hitCommand != null)
                 {
-                    gameModelViewer.CurrentCommands.Insert(gameModelViewer.CurrentCommands.IndexOf(hitCommand), new CommandViewer(draggedCommand));
+                    GameModelViewer.CurrentCommands.Insert(GameModelViewer.CurrentCommands.IndexOf(hitCommand), new CommandViewer(draggedCommand));
                 }
                 else
                 {
-                    gameModelViewer.CurrentCommands.Add(new CommandViewer(draggedCommand));
+                    GameModelViewer.CurrentCommands.Add(new CommandViewer(draggedCommand));
                 }
             };
 

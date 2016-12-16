@@ -1,21 +1,17 @@
 ﻿using System;
-using System.IO;
-using System.Windows;
-using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using TeachMe.Domain.Robot;
 
-namespace TeachMe.Appl.Robot
+namespace TeachMe.Appl.Game.Robot.Command
 {
     public class CommandViewer
     {
-        public CommandViewer(Command command)
+        public CommandViewer(Domain.Robot.Command command)
         {
             Command = command;
-            Icon = new BitmapImage(new Uri("Robot/CommandImages/" + Command.Name + ".png", UriKind.Relative));
+            Icon = new BitmapImage(new Uri("Game/Robot/Command/Icons/" + Command.Name + ".png", UriKind.Relative));
         }
         
-        public Command Command { get; }
+        public Domain.Robot.Command Command { get; }
         public BitmapImage Icon { get; }
 
         public CommandViewer (CommandViewer commandViewer)

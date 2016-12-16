@@ -4,8 +4,8 @@
              xmlns:local="clr-namespace:TeachMe.Appl"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:generic="clr-namespace:System.Collections.Generic;assembly=mscorlib"
-             xmlns:robot="clr-namespace:TeachMe.Appl.Robot"
              xmlns:s="clr-namespace:System;assembly=mscorlib"
+             xmlns:command="clr-namespace:TeachMe.Appl.Game.Robot.Command"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <s:Double x:Key="CommandIconSize">50</s:Double>
@@ -34,6 +34,7 @@
                 <Setter Property="Foreground" Value="#ECF0F1"/>
                 <Setter Property="Padding" Value="15"></Setter>
                 <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="FontSize" Value="20"/>
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
@@ -60,12 +61,12 @@
             </Style.Triggers>
         </Style>
     
-        <DataTemplate x:Key="CommandItemTemplate" DataType="robot:CommandViewer">
+        <DataTemplate x:Key="CommandItemTemplate" DataType="command:CommandViewer">
             <Grid Cursor="Hand">
                 <Image Source="{Binding Path=Icon}" Stretch="Fill"></Image>
             </Grid>
         </DataTemplate>
-        <DataTemplate x:Key="CommandItemTemplateWithDescription" DataType="robot:CommandViewer">
+        <DataTemplate x:Key="CommandItemTemplateWithDescription" DataType="command:CommandViewer">
             <Grid Cursor="Hand" ToolTip="{Binding Path = Command.Attributes.Description}">
                 <Image Source="{Binding Path=Icon}" Stretch="Fill"></Image>
             </Grid>

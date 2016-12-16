@@ -25,8 +25,6 @@ namespace TeachMe.Appl
         private readonly GameModel _gameModel;
         private readonly AvailableCommands _availableCommands;
         private readonly CurrentCommands _currentCommands;
-
-        private Grid draggedCommandGrid;
         
         public MainWindow()
         {
@@ -40,31 +38,13 @@ namespace TeachMe.Appl
             AvailableCommands.ItemsSource = _availableCommands.Commands;
 
             MouseLeftButtonDown += (sender, args) => DragMove();
-
-            MouseMove += (sender, args) =>
-            {
-                if (draggedCommandGrid == null)
-                    return;
-                // ОШИБКА
-                //draggedCommandGrid. = args.GetPosition((IInputElement)sender);
-            };
-
+            
             AvailableCommands.PreviewMouseLeftButtonDown += (sender, args) =>
             {
                 var command = GetCommandViewerInListBox(AvailableCommands, args);
 
                 if (command == null)
                     return;
-
-                var draggedCommandImage = new Image
-                {
-                    Source = command.Icon,
-                    Width = 50,
-                    Height = 50
-                };
-
-                draggedCommandGrid = new Grid();
-                draggedCommandGrid.Children.Add(draggedCommandImage);
                 
                 DragDrop.DoDragDrop(AvailableCommands, command, DragDropEffects.Copy);
             };
@@ -106,7 +86,7 @@ namespace TeachMe.Appl
                     _currentCommands.Commands.Add(new CommandViewer(draggedCommand));
                 }
             };
-            
+
             // Для верхних трех кнопочек
             /*this.FoldingButton.Click +=
                 (sender, args) =>

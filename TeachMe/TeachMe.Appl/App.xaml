@@ -61,7 +61,7 @@
         </Style>
 
         <DataTemplate x:Key="ItemTemplateWithoutToolTip" DataType="robot:CommandViewer">
-        <Grid>
+            <Grid>
                 <Image Source="{Binding Path=Icon}" Stretch="Fill"></Image>
             </Grid>
         </DataTemplate>

@@ -17,21 +17,23 @@
             <ColumnDefinition Width="204"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <Grid Visibility="Visible">
-            <Image Width="{StaticResource CommandIconSize}" Height="{StaticResource CommandIconSize}" Stretch="Fill"></Image>
-        </Grid>
-
         <Canvas Grid.Column="0">
         </Canvas>
-        
+
         <DockPanel Grid.Column="1" LastChildFill="False">
             <ListBox x:Name="CurrentCommands" AllowDrop="True" Style="{StaticResource ListWithCommands}" ItemTemplate="{StaticResource ItemTemplateWithoutToolTip}"></ListBox>
             <Button DockPanel.Dock="Top">Редактировать</Button>
             <ListBox x:Name="AvailableCommands" Style="{StaticResource ListWithCommands}"></ListBox>
             <Button DockPanel.Dock="Bottom">Запустить</Button>
         </DockPanel>
+    </Grid>
+</Window>
 
-        <!--<DockPanel LastChildFill="True">
+    
+    <!--
+    <Image x:Name="CommandIconForMouse" Panel.ZIndex="1000" Width="{StaticResource CommandIconSize}" Height="{StaticResource CommandIconSize}" Stretch="Fill"></Image>
+    
+    <DockPanel LastChildFill="True">
             <DockPanel DockPanel.Dock="Top" LastChildFill="True">
                     <Button x:Name="ClosingButton" Style="{StaticResource TopToolButton}">
                         <Canvas Margin="-6">
@@ -59,5 +61,3 @@
                 <Button DockPanel.Dock="Bottom">Запустить</Button>
             </DockPanel>
         </DockPanel>-->
-    </Grid>
-</Window>

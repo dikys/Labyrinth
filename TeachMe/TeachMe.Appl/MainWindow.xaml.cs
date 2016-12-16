@@ -43,7 +43,22 @@ namespace TeachMe.Appl
             {
                 var command = GetCommandViewerInListBox(AvailableCommands, e);
 
+                if (command == null)
+                    return;
+
                 DragDrop.DoDragDrop(AvailableCommands, command, DragDropEffects.Copy);
+            };
+
+            CurrentCommands.PreviewMouseLeftButtonDown += (sender, e) =>
+            {
+                var command = GetCommandViewerInListBox(CurrentCommands, e);
+
+                if (command == null)
+                    return;
+
+                _currentCommands.Commands.RemoveAt(command.Index);
+
+                DragDrop.DoDragDrop(CurrentCommands, command, DragDropEffects.Move);
             };
 
             CurrentCommands.Drop += (sender, e) =>
@@ -55,7 +70,7 @@ namespace TeachMe.Appl
 
                 if (!_currentCommands.Commands.Any())
                 {
-                    _currentCommands.Commands.Add(draggedCommand);
+                    _currentCommands.Commands.Add(new CommandViewer(draggedCommand));
 
                     return;
                 }
@@ -64,96 +79,14 @@ namespace TeachMe.Appl
 
                 if (hitCommand != null)
                 {
-                    var index = 0;
-
-                    _currentCommands.Commands.Insert(index, draggedCommand);
+                    _currentCommands.Commands.Insert(hitCommand.Index, new CommandViewer(draggedCommand));
                 }
                 else
                 {
-                    _currentCommands.Commands.Add(draggedCommand);
-                }
-            };
-
-            /*AllCommands.PreviewMouseLeftButtonDown += (sender, e) =>
-            {
-                if (_dragged != null)
-                    return;
-
-                var element = AllCommands.InputHitTest(e.GetPosition(AllCommands)) as UIElement;
-
-                while (element != null)
-                {
-                    if (element is ListBoxItem)
-                    {
-                        var item = (ListBoxItem) element;
-
-                        if (!(item.Content is CommandApp))
-                            return;
-
-                        var command = (CommandApp)item.Content;
-
-                        _dragged = command;
-
-                        DragDrop.DoDragDrop(item, command, DragDropEffects.Copy);
-                    }
-
-                    element = VisualTreeHelper.GetParent(element) as UIElement;
-
-                    if (element is ListBox)
-                        return;
+                    _currentCommands.Commands.Add(new CommandViewer(draggedCommand));
                 }
             };
             
-            CurrentProgramm.Drop += (sender, e) =>
-            {
-                _dragged = null;
-
-                if (!e.Data.GetDataPresent(typeof (CommandApp)))
-                    return;
-
-                var draggedCommand = (CommandApp) e.Data.GetData(typeof(CommandApp));
-                
-                if (!CurrentCommands.Any())
-                {
-                    CurrentCommands.Add(draggedCommand);
-
-                    return;
-                }
-
-                var element = CurrentProgramm.InputHitTest(e.GetPosition(CurrentProgramm)) as UIElement;
-                CommandApp hitCommandApp = null;
-
-                while (element != null)
-                {
-                    if (element is ListBoxItem)
-                    {
-                        var item = (ListBoxItem)element;
-
-                        if (!(item.Content is CommandApp))
-                            return;
-
-                        hitCommandApp = (CommandApp)item.Content;
-                    }
-
-                    element = VisualTreeHelper.GetParent(element) as UIElement;
-
-                    if (element is ListBox)
-                        break;
-                }
-
-                if (hitCommandApp != null)
-                {
-                    MessageBox.Show(CurrentCommands.IndexOf(hitCommandApp).ToString());
-
-                    CurrentCommands.Insert(CurrentCommands.IndexOf(hitCommandApp),
-                        draggedCommand);
-                }
-                else
-                {
-                    CurrentCommands.Add(draggedCommand);
-                }
-            };*/
-
             // Для верхних трех кнопочек
             /*this.FoldingButton.Click +=
                 (sender, args) =>

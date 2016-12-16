@@ -59,7 +59,7 @@
         </Style>
 
         <DataTemplate x:Key="ItemTemplateWithoutToolTip" DataType="robot:CommandViewer">
-            <Grid>
+        <Grid>
                 <Image Source="{Binding Path=Icon}" Stretch="Fill"></Image>
             </Grid>
         </DataTemplate>
@@ -122,7 +122,7 @@
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
                         <DataTemplate DataType="robot:CommandViewer">
-                            <Grid ToolTip="{Binding Path=Command.Attributes.Description}">
+                            <Grid ToolTip="{Binding Path = Command.Attributes.Description}">
                                 <Image Source="{Binding Path=Icon}" Stretch="Fill"></Image>
                             </Grid>
                         </DataTemplate>

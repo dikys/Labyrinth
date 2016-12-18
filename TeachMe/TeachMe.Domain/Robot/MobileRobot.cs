@@ -11,23 +11,27 @@ namespace TeachMe.Domain.Robot
 {
     public class MobileRobot
     {
+        private Transform _transform;
+        public Transform Transform
+        {
+            get { return _transform; }
+            private set { _transform = value; }
+        }
+        public MicroProcessor Processor { get; }
+        public List<Command> Commands { get; }
+
         public MobileRobot()
         {
             Commands = new List<Command>();
 
             InitilizateCommands();
         }
-
         public MobileRobot (Transform transform) : this()
         {
             Processor = new MicroProcessor();
             Transform = transform;
         }
-
-        public Transform Transform { get; private set; }
-        public MicroProcessor Processor { get; }
-        public List<Command> Commands { get; }
-
+        
         public void InitilizateCommands()
         {
             this.Commands
@@ -39,29 +43,16 @@ namespace TeachMe.Domain.Robot
 
         public void Run()
         {
-            Processor.Reset();
             Processor.Run();
         }
 
-        //protected IEnumerable<MethodInfo> GetCommands()
-        //{
-        //    return this.GetType()
-        //        .GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
-        //        .Where(methodInfo => methodInfo.GetCustomAttribute(typeof(CommandInfoAttribute), true) != null);
-        //}
-
-        //private void InitilizateCommands()
-        //{
-        //    this.Commands = new ExpandoObject();
-        //    var dictionary = (IDictionary<string, object>) this.Commands;
-
-        //    foreach (var command in this.GetCommands())
-        //    {
-        //        dictionary[command.Name] = command.ReturnType;
-        //    }
-        //}
-
         #region Robot commands
+        /*
+         * По названию метода происходит загрузка нужной иконки и нужной анимации
+         * 
+         * 
+        */
+
         [CommandInfo(Name = "Вперед", Description = "Двигаться на 1 клетку вперед")]
         public void Forward()
         {
@@ -73,17 +64,17 @@ namespace TeachMe.Domain.Robot
         {
             Transform = Transform - Transform.Forward;
         }
+        
+        [CommandInfo(Name = "Налево", Description = "Повернуться на 90 по часовой")]
+        public void Leftward()
+        {
+            Transform = Transform.Rotate(90);
+        }
 
         [CommandInfo(Name = "Направо", Description = "Повернуться на 90 против часовой")]
         public void Rightward()
         {
             Transform = Transform.Rotate(-90);
-        }
-
-        [CommandInfo(Name = "Налево", Description = "Повернуться на 90 по часовой")]
-        public void Leftward()
-        {
-            Transform = Transform.Rotate(90);
         }
         #endregion
     }

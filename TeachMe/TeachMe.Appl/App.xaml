@@ -6,10 +6,10 @@
              xmlns:generic="clr-namespace:System.Collections.Generic;assembly=mscorlib"
              xmlns:s="clr-namespace:System;assembly=mscorlib"
              xmlns:command="clr-namespace:TeachMe.Appl.Game.Robot.Command"
-             StartupUri="MainWindow.xaml">
+             StartupUri="MainWindow.xaml"
+             xmlns:gif="http://wpfanimatedgif.codeplex.com">
     <Application.Resources>
         <s:Double x:Key="CommandIconSize">50</s:Double>
-        
         <Style x:Key="DefaultStyleWindow" TargetType="{x:Type Window}">
             <Setter Property="WindowStyle" Value="None"/>
             <Setter Property="AllowsTransparency" Value="True"/>

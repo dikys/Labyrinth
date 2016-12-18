@@ -1,24 +1,23 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using TeachMe.Appl.Exception;
 using TeachMe.Appl.Game;
 using TeachMe.Appl.Game.Robot.Command;
 using TeachMe.Domain;
+using TeachMe.Domain.Field;
 using TeachMe.Domain.Robot;
 using TeachMe.Infrastructure;
 using Transform = TeachMe.Infrastructure.Transform;
 
 /*
  * Пожелания:
+ * 
+ * 
+ * Во время выполнения команд заблокировать листбоксы
+ * Кнопку сделать отстановить 
  * 
  * Разные типы ячеек нужны
  * 
@@ -44,10 +43,15 @@ namespace TeachMe.Appl
 
             Loaded += (sender, args) =>
             {
-                GameModelViewer = new GameModelViewer(new GameModel(new MobileRobot(new Transform(new Location(1, 1))), new Field(5)),
-                    MainCanvas,
-                    CurrentCommands,
-                    AvailableCommands);
+                GameModelViewer =
+                    new GameModelViewer(
+                        new GameModel(
+                            new MobileRobot(
+                                new Transform(new Location(1, 1))),
+                            new Field(4)),
+                        MainCanvas,
+                        CurrentCommands,
+                        AvailableCommands);
             };
 
             RunProgramm.Click += (sender, args) =>
@@ -74,8 +78,14 @@ namespace TeachMe.Appl
                 if (command == null)
                     return;
 
-                GameModelViewer.CurrentCommands.RemoveAt(GameModelViewer.CurrentCommands.IndexOf(command));
-
+                GameModelViewer
+                    .MobileRobotViewer
+                    .CurrentCommands
+                    .RemoveAt(GameModelViewer
+                        .MobileRobotViewer
+                        .CurrentCommands
+                        .IndexOf(command));
+                
                 DragDrop.DoDragDrop(CurrentCommands, command, DragDropEffects.Move);
             };
 
@@ -86,9 +96,12 @@ namespace TeachMe.Appl
 
                 var draggedCommand = (CommandViewer)args.Data.GetData(typeof(CommandViewer));
 
-                if (!GameModelViewer.CurrentCommands.Any())
+                if (!GameModelViewer.MobileRobotViewer.CurrentCommands.Any())
                 {
-                    GameModelViewer.CurrentCommands.Add(new CommandViewer(draggedCommand));
+                    GameModelViewer
+                        .MobileRobotViewer
+                        .CurrentCommands
+                        .Add(new CommandViewer(draggedCommand));
 
                     return;
                 }
@@ -97,11 +110,18 @@ namespace TeachMe.Appl
 
                 if (hitCommand != null)
                 {
-                    GameModelViewer.CurrentCommands.Insert(GameModelViewer.CurrentCommands.IndexOf(hitCommand), new CommandViewer(draggedCommand));
+                    GameModelViewer
+                        .MobileRobotViewer
+                        .CurrentCommands
+                        .Insert(GameModelViewer.MobileRobotViewer.CurrentCommands.IndexOf(hitCommand),
+                            new CommandViewer(draggedCommand));
                 }
                 else
                 {
-                    GameModelViewer.CurrentCommands.Add(new CommandViewer(draggedCommand));
+                    GameModelViewer
+                        .MobileRobotViewer
+                        .CurrentCommands
+                        .Add(new CommandViewer(draggedCommand));
                 }
             };
 

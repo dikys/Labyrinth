@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using TeachMe.Domain;
+using TeachMe.Domain.Field;
 using TeachMe.Domain.Robot;
 using TeachMe.Infrastructure;
 

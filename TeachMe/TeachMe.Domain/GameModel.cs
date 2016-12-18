@@ -9,7 +9,7 @@ namespace TeachMe.Domain
 {
     public class GameModel
     {
-        public GameModel(Robot.MobileRobot robot, Field field)
+        public GameModel(Robot.MobileRobot robot, Field.Field field)
         {
             if (robot == null)
                 throw new ArgumentNullException("robot");
@@ -21,6 +21,6 @@ namespace TeachMe.Domain
         }
         
         public MobileRobot Robot { get; private set; }
-        public Field Field { get; private set; }
+        public Field.Field Field { get; private set; }
     }
 }

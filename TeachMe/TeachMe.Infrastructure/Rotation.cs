@@ -56,9 +56,37 @@ namespace TeachMe.Infrastructure
             return new Rotation(ConvertToAngle(angle));
         }
 
-        public static Rotation operator +(Rotation left, int right)
+        public static Rotation operator +(Rotation left, int angle)
         {
-            return new Rotation(ConvertToAngle((int)left.Angle + right));
+            return new Rotation(ConvertToAngle((int)left.Angle + angle));
+        }
+
+        public static double operator -(Rotation left, Rotation right)
+        {
+            var leftAngle = (int) left.Angle;
+            var rightAngle = (int) right.Angle;
+
+            var a1 = left.GetForward();
+            var a2 = right.GetForward();
+
+            var cosA = a1.X*a2.X + a1.Y*a2.Y;
+            var sinA = a1.X*a2.Y - a1.Y*a2.X;
+
+            var result = Math.Acos(cosA);
+
+            if (sinA < 0)
+                return -result;
+
+            return result;
+
+            /*if (leftAngle < rightAngle)
+            {
+                leftAngle += 360;
+
+                return -(leftAngle - rightAngle);
+            }
+
+            return leftAngle - rightAngle;*/
         }
 
         private bool Equals(Rotation other)

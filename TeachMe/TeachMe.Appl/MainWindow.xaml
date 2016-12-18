@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
         xmlns:local="clr-namespace:TeachMe.Appl"
         mc:Ignorable="d"
         Title="MainWindow"
@@ -19,14 +20,13 @@
 
         <Canvas x:Name="MainCanvas" Grid.Column="0">
         </Canvas>
-
         <DockPanel Grid.Column="1" LastChildFill="False">
             <Label DockPanel.Dock="Top" HorizontalAlignment="Center" FontSize="20">Текущая программа</Label>
             <ListBox x:Name="CurrentCommands" AllowDrop="True" DockPanel.Dock="Top" Style="{StaticResource ListWithCommands}"></ListBox>
 
             <Label DockPanel.Dock="Top" HorizontalAlignment="Center" FontSize="20">Доступные команды</Label>
             <ListBox x:Name="AvailableCommands" DockPanel.Dock="Top" Style="{StaticResource ListWithCommands}" ItemTemplate="{StaticResource CommandItemTemplateWithDescription}"></ListBox>
-            
+
             <Button x:Name="RunProgramm" DockPanel.Dock="Bottom">Запустить</Button>
         </DockPanel>
     </Grid>

@@ -8,16 +8,24 @@ namespace TeachMe.Appl.Game.Robot.Command
         public CommandViewer(Domain.Robot.Command command)
         {
             Command = command;
-            Icon = new BitmapImage(new Uri("Game/Robot/Command/Icons/" + Command.Name + ".png", UriKind.Relative));
+            Icon = new BitmapImage(new Uri(PathToCommandIcons + Command.Name + ".png"));
         }
-        
-        public Domain.Robot.Command Command { get; }
-        public BitmapImage Icon { get; }
-
-        public CommandViewer (CommandViewer commandViewer)
+        public CommandViewer(CommandViewer commandViewer)
         {
             Command = commandViewer.Command;
             Icon = commandViewer.Icon;
         }
+
+        public Domain.Robot.Command Command { get; }
+        public BitmapImage Icon { get; }
+
+        static CommandViewer()
+        {
+            PathToCommandIcons = "pack://application:,,,/Game/Robot/Command/Icons/";
+            PathToCommandAnimations = "pack://application:,,,/Game/Robot/Images/";
+        }
+
+        public static string PathToCommandIcons { get; }
+        public static string PathToCommandAnimations { get; }
     }
 }

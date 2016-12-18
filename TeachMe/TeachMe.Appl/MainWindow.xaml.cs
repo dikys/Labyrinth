@@ -52,11 +52,20 @@ namespace TeachMe.Appl
                         MainCanvas,
                         CurrentCommands,
                         AvailableCommands);
+
+                GameModelViewer.MobileRobotViewer.EndProgramm += () =>
+                {
+                    CurrentCommands.IsEnabled = true;
+                    AvailableCommands.IsEnabled = true;
+                };
             };
 
             RunProgramm.Click += (sender, args) =>
             {
                 GameModelViewer.RunProgramm();
+
+                CurrentCommands.IsEnabled = false;
+                AvailableCommands.IsEnabled = false;
             };
 
             MouseLeftButtonDown += (sender, args) => DragMove();

@@ -6,8 +6,7 @@
              xmlns:generic="clr-namespace:System.Collections.Generic;assembly=mscorlib"
              xmlns:s="clr-namespace:System;assembly=mscorlib"
              xmlns:command="clr-namespace:TeachMe.Appl.Game.Robot.Command"
-             StartupUri="MainWindow.xaml"
-             xmlns:gif="http://wpfanimatedgif.codeplex.com">
+             StartupUri="MainWindow.xaml">
     <Application.Resources>
         <s:Double x:Key="CommandIconSize">50</s:Double>
         <Style x:Key="DefaultStyleWindow" TargetType="{x:Type Window}">
@@ -100,7 +99,7 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ListBox}">
                             <!--<Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="1" SnapsToDevicePixels="True">-->
-                            <Grid Background="{TemplateBinding Background}">
+                            <Grid Name="ListGrid"  Background="{TemplateBinding Background}">
                                 <ScrollViewer Focusable="False" Padding="{TemplateBinding Padding}">
                                     <ScrollViewer.Resources>
                                         <system:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">4</system:Double>
@@ -112,10 +111,9 @@
                             </Grid>
                             <!--</Border>-->
                             <ControlTemplate.Triggers>
-                                <!--<Trigger Property="IsEnabled" Value="False">
-                                    <Setter Property="Background" TargetName="Bd" Value="White"/>
-                                    <Setter Property="BorderBrush" TargetName="Bd" Value="#FFD9D9D9"/>
-                                </Trigger>-->
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="ListGrid" Property="Opacity" Value="0.5"/>
+                                </Trigger>
                                 <MultiTrigger>
                                     <MultiTrigger.Conditions>
                                         <Condition Property="IsGrouping" Value="True"/>

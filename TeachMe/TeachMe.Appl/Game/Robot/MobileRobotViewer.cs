@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
@@ -51,9 +52,14 @@ namespace TeachMe.Appl.Game.Robot
 
         public bool IsRun { get; private set; }
 
+        public event Action EndProgramm;
+
         public void RunProgramm()
         {
             if (IsRun)
+                return;
+
+            if (!CurrentCommands.Any())
                 return;
 
             IsRun = true;
@@ -61,19 +67,28 @@ namespace TeachMe.Appl.Game.Robot
             _robot.Processor.Commands.Clear();
             _robot.Processor.Reset();
             _robot.Processor.Commands.AddRange(CurrentCommands.Select(commandViewer => commandViewer.Command.Method));
-
+            
             var timer = new Timer(AnimationDuration.TimeSpan.TotalMilliseconds);
             timer.Elapsed += (sender, args) =>
             {
                 Infrastructure.Transform beforeTransform = _robot.Transform;
                 _robot.Processor.RunNext();
 
-                if (_robot.Processor.IsFinish)
-                    timer.Stop();
-
                 Animator.Dispatcher.BeginInvoke(new Action<int, Infrastructure.Transform>(AnimateRobot),
                     _robot.Processor.CurrentCommandNumber - 1,
                     beforeTransform);
+
+                if (_robot.Processor.IsFinish)
+                {
+                    timer.Stop();
+
+                    if (EndProgramm != null)
+                    {
+                        Thread.Sleep((int)AnimationDuration.TimeSpan.TotalMilliseconds);
+
+                        Animator.Dispatcher.BeginInvoke(EndProgramm);
+                    }
+                }
             };
             timer.Start();
 
@@ -88,28 +103,6 @@ namespace TeachMe.Appl.Game.Robot
 
             Animator.PlayAnimation(CurrentCommands[commandIndex].Command.Name);
         }
-
-        /*private void PlayGifAnimation(int commandIndex)
-        {
-            var currentCommand = CurrentCommands[commandIndex];
-
-            if (currentCommand.Command.Name == "Forward")
-            {
-                _robotImage.Source = _robotAnimatios[0];
-
-                //var image = new BitmapImage(new Uri("Game/Robot/Images/ForwardAnimation.gif", UriKind.Relative));
-
-                //ImageBehavior.SetAnimatedSource(_robotImage, _robotAnimatios[0]);
-            }
-            else if (currentCommand.Command.Name == "Backward")
-            {
-                _robotImage.Source = _robotAnimatios[1];
-
-                //var robotBitmap = new BitmapImage(new Uri("Game/Robot/Images/StayAnimation.gif", UriKind.Relative));
-
-                //ImageBehavior.SetAnimatedSource(_robotImage, _robotAnimatios[1]);
-            }
-        }*/
 
         private Storyboard CreateTransformAnimation(Size robotSize,
             Infrastructure.Transform currentTransform,
@@ -158,11 +151,5 @@ namespace TeachMe.Appl.Game.Robot
 
             return result;
         }
-
-        /*public void DrawRobot()
-        {
-            Canvas.SetLeft(_robotImage, _gameModel.Robot.Transform.Location.X * _itemWidth);
-            Canvas.SetTop(_robotImage, _gameModel.Robot.Transform.Location.Y * _itemHeight);
-        }*/
     }
 }

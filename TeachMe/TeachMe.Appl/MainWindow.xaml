@@ -22,10 +22,10 @@
         </Canvas>
         <DockPanel Grid.Column="1" LastChildFill="False">
             <Label DockPanel.Dock="Top" HorizontalAlignment="Center" FontSize="20">Текущая программа</Label>
-            <ListBox x:Name="CurrentCommands" AllowDrop="True" DockPanel.Dock="Top" Style="{StaticResource ListWithCommands}"></ListBox>
+            <ListBox x:Name="CurrentCommands" AllowDrop="True" DockPanel.Dock="Top" Style="{StaticResource ListWithCurrentCommands}"></ListBox>
 
             <Label DockPanel.Dock="Top" HorizontalAlignment="Center" FontSize="20">Доступные команды</Label>
-            <ListBox x:Name="AvailableCommands" DockPanel.Dock="Top" Style="{StaticResource ListWithCommands}" ItemTemplate="{StaticResource CommandItemTemplateWithDescription}"></ListBox>
+            <ListBox x:Name="AvailableCommands" DockPanel.Dock="Top" Style="{StaticResource ListWithAvailableCommands}"></ListBox>
 
             <Button x:Name="RunProgramm" DockPanel.Dock="Bottom">Запустить</Button>
         </DockPanel>

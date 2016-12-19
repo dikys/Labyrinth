@@ -38,19 +38,29 @@ namespace TeachMe.Appl
         public MainWindow()
         {
             InitializeComponent();
-
+            
             Loaded += (sender, args) =>
             {
+                MainCanvas.LayoutTransform = new TransformGroup()
+                {
+                    Children = new TransformCollection()
+                    {
+                        new ScaleTransform(1, -1),
+                        new TranslateTransform(0, -MainCanvas.ActualHeight)
+                    }
+                };
+
                 GameModelViewer =
                     new GameModelViewer(
                         new GameModel(
                             new MobileRobot(
                                 new Transform(new Location(1, 1))),
                             new Field(4)),
-                        MainCanvas,
-                        CurrentCommands,
-                        AvailableCommands);
+                        MainCanvas);
 
+                CurrentCommands.ItemsSource = GameModelViewer.MobileRobotViewer.CurrentCommands;
+                AvailableCommands.ItemsSource = GameModelViewer.MobileRobotViewer.AvailableCommands;
+                
                 GameModelViewer.MobileRobotViewer.EndProgramm += () =>
                 {
                     CurrentCommands.IsEnabled = true;

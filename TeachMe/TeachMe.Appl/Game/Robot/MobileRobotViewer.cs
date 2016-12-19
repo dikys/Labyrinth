@@ -24,7 +24,7 @@ namespace TeachMe.Appl.Game.Robot
             Canvas.SetLeft(Animator, _robot.Transform.Location.X * Size.Width);
             Canvas.SetTop(Animator, _robot.Transform.Location.Y * Size.Height);
 
-            AvailableCommands = robot.Commands.Select(command =>
+            AvailableCommands = robot.AvailableCommands.Select(command =>
             {
                 var commandViewer = new CommandViewer(command);
                 
@@ -54,7 +54,7 @@ namespace TeachMe.Appl.Game.Robot
 
         public event Action EndProgramm;
 
-        public void RunProgramm()
+        public void ExecuteCurrentCommands()
         {
             if (IsRun)
                 return;
@@ -64,21 +64,20 @@ namespace TeachMe.Appl.Game.Robot
 
             IsRun = true;
 
-            _robot.Processor.Commands.Clear();
-            _robot.Processor.Reset();
-            _robot.Processor.Commands.AddRange(CurrentCommands.Select(commandViewer => commandViewer.Command.Method));
+            _robot.ClearProgramm();
+            _robot.AddCommands(CurrentCommands.Select(commandViewer => commandViewer.Command));
             
             var timer = new Timer(AnimationDuration.TimeSpan.TotalMilliseconds);
             timer.Elapsed += (sender, args) =>
             {
                 Infrastructure.Transform beforeTransform = _robot.Transform;
-                _robot.Processor.RunNext();
+                _robot.RunNextCommand();
 
                 Animator.Dispatcher.BeginInvoke(new Action<int, Infrastructure.Transform>(AnimateRobot),
-                    _robot.Processor.CurrentCommandNumber - 1,
+                    _robot.CurrentCommandNumber - 1,
                     beforeTransform);
 
-                if (_robot.Processor.IsFinish)
+                if (_robot.IsProgrammEnd)
                 {
                     timer.Stop();
 
@@ -95,61 +94,13 @@ namespace TeachMe.Appl.Game.Robot
             IsRun = false;
         }
 
-        private void AnimateRobot(int commandIndex, Infrastructure.Transform begoreTransform)
+        private void AnimateRobot(int commandIndex, Infrastructure.Transform beforeTransform)
         {
-            var transformAnimation = CreateTransformAnimation(Size, _robot.Transform, begoreTransform, AnimationDuration);
-            
-            transformAnimation.Begin(Animator);
+            var deltaLocation = _robot.Transform.Location - beforeTransform.Location;
+            var deltaAngle = (beforeTransform.Rotation - _robot.Transform.Rotation) * 180 / Math.PI;
+            Animator.PlayTransformAnimation(deltaLocation.X, deltaLocation.Y, deltaAngle, AnimationDuration);
 
             Animator.PlayAnimation(CurrentCommands[commandIndex].Command.Name);
-        }
-
-        private Storyboard CreateTransformAnimation(Size robotSize,
-            Infrastructure.Transform currentTransform,
-            Infrastructure.Transform beforeTransform,
-            Duration duration)
-        {
-            var result = new Storyboard();
-
-            var deltaLocation = currentTransform.Location - beforeTransform.Location;
-            var deltaAngle = (beforeTransform.Rotation - currentTransform.Rotation) * 180 / Math.PI;
-
-            if (deltaLocation.X != 0)
-            {
-                var animation = new DoubleAnimation()
-                {
-                    By = deltaLocation.X * robotSize.Width,
-                    Duration = duration
-                };
-                Storyboard.SetTargetProperty(animation, new PropertyPath(Canvas.LeftProperty));
-
-                result.Children.Add(animation);
-            }
-            if (deltaLocation.Y != 0)
-            {
-                var animation = new DoubleAnimation()
-                {
-                    By = deltaLocation.Y * robotSize.Height,
-                    Duration = duration
-                };
-                Storyboard.SetTargetProperty(animation, new PropertyPath(Canvas.TopProperty));
-
-                result.Children.Add(animation);
-            }
-            if ((int)deltaAngle != 0)
-            {
-                var animation = new DoubleAnimation()
-                {
-                    By = deltaAngle,
-                    Duration = duration
-                };
-
-                Storyboard.SetTargetProperty(animation, new PropertyPath(Animator.RotationPropertyPath + ".Angle"));
-
-                result.Children.Add(animation);
-            }
-
-            return result;
         }
     }
 }

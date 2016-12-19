@@ -10,39 +10,25 @@ namespace TeachMe.Appl.Game
 {
     public class GameModelViewer
     {
-        public GameModelViewer(GameModel gameModel, Canvas canvas, ListBox listForCurrentCommands, ListBox listForAvailableCommands)
+        public GameModelViewer(GameModel gameModel, Canvas canvas)
         {
             _gameModel = gameModel;
             
-            _canvas = canvas;
-            _canvas.LayoutTransform = new TransformGroup()
-            {
-                Children = new TransformCollection()
-                {
-                    new ScaleTransform(1, -1),
-                    new TranslateTransform(0, -_canvas.ActualHeight)
-                }
-            };
-            _itemWidth = _canvas.ActualWidth / _gameModel.Field.Rows;
-            _itemHeight = _canvas.ActualHeight / _gameModel.Field.Colums;
+            ItemSize = new Size(canvas.ActualWidth / _gameModel.Field.Rows,
+                canvas.ActualHeight / _gameModel.Field.Colums);
 
             MobileRobotViewer = new MobileRobotViewer(gameModel.Robot,
-                new Size(_itemWidth, _itemHeight),
+                ItemSize,
                 new Duration(TimeSpan.FromMilliseconds(1000)));
 
-            listForCurrentCommands.ItemsSource = MobileRobotViewer.CurrentCommands;
-            listForAvailableCommands.ItemsSource = MobileRobotViewer.AvailableCommands;
-
-            DrawGame();
+            DrawGame(canvas);
         }
-        private Canvas _canvas;
-        private GameModel _gameModel;
-        public MobileRobotViewer MobileRobotViewer { get; }
 
-        private double _itemWidth;
-        private double _itemHeight;
+        private readonly GameModel _gameModel;
+        public MobileRobotViewer MobileRobotViewer { get; }
+        public Size ItemSize { get; }
         
-        private void DrawGame()
+        private void DrawGame(Canvas canvas)
         {
             var sellImage = new BitmapImage(new Uri("Game/Field/DefaultSell.png", UriKind.Relative));
 
@@ -53,25 +39,25 @@ namespace TeachMe.Appl.Game
                     var image = new Image()
                     {
                         Source = sellImage,
-                        Width = _itemWidth,
-                        Height = _itemHeight,
+                        Width = ItemSize.Width,
+                        Height = ItemSize.Height,
                         Stretch = Stretch.Fill,
                         LayoutTransform = new ScaleTransform(1, -1)
                     };
-                    
-                    _canvas.Children.Add(image);
 
-                    Canvas.SetLeft(image, x * _itemWidth);
-                    Canvas.SetTop(image, y * _itemHeight);
+                    canvas.Children.Add(image);
+
+                    Canvas.SetLeft(image, x * ItemSize.Width);
+                    Canvas.SetTop(image, y * ItemSize.Height);
                 }
             }
-            
-            _canvas.Children.Add(MobileRobotViewer.Animator);
+
+            canvas.Children.Add(MobileRobotViewer.Animator);
         }
 
         public void RunProgramm()
         {
-            MobileRobotViewer.RunProgramm();
+            MobileRobotViewer.ExecuteCurrentCommands();
         }
     }
 }

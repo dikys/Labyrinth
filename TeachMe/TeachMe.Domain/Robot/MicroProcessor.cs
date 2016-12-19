@@ -26,12 +26,19 @@ namespace TeachMe.Domain.Robot
             }
         }
 
-        public void Reset()
+        public void Reboot()
         {
             CurrentCommandNumber = 0;
         }
+
+        public void Clear()
+        {
+            Commands.Clear();
+
+            Reboot();
+        }
         
-        public void Run()
+        public void ExecuteAllCommands()
         {
             if (IsFinish)
                 return;
@@ -40,7 +47,7 @@ namespace TeachMe.Domain.Robot
             CurrentCommandNumber = Commands.Count - 1;
         }
 
-        public void RunNext()
+        public void ExecuteNextCommand()
         {
             if (IsFinish)
                 return;

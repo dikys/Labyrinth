@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using TeachMe.Infrastructure;
@@ -11,41 +12,82 @@ namespace TeachMe.Domain.Robot
 {
     public class MobileRobot
     {
-        private Transform _transform;
-        public Transform Transform
-        {
-            get { return _transform; }
-            private set { _transform = value; }
-        }
-        public MicroProcessor Processor { get; }
-        public List<Command> Commands { get; }
+        public Transform Transform { get; private set; }
 
-        public MobileRobot()
-        {
-            Commands = new List<Command>();
-
-            InitilizateCommands();
-        }
-        public MobileRobot (Transform transform) : this()
-        {
-            Processor = new MicroProcessor();
-            Transform = transform;
-        }
+        private readonly MicroProcessor _processor;
         
-        public void InitilizateCommands()
+        public List<Command> AvailableCommands { get; private set; }
+        public bool IsProgrammEnd => _processor.IsFinish;
+        public int CurrentCommandNumber => _processor.CurrentCommandNumber;
+        
+        public MobileRobot (Transform transform)
         {
-            this.Commands
+            _processor = new MicroProcessor();
+            Transform = transform;
+
+            DownloadCommands();
+        }
+
+        public void RunProgramm()
+        {
+            _processor.ExecuteAllCommands();
+        }
+
+        public void RunNextCommand()
+        {
+            _processor.ExecuteNextCommand();
+        }
+
+        public void RebootProgramm()
+        {
+            _processor.Reboot();
+        }
+
+        public void ClearProgramm()
+        {
+            _processor.Clear();
+        }
+
+        public void AddCommands(IEnumerable<Command> commands)
+        {
+            foreach (var command in commands)
+            {
+                AddCommand(command);
+            }
+        }
+
+        public void AddCommands(IEnumerable<int> commandIndexes)
+        {
+            foreach (var commandIndex in commandIndexes)
+            {
+                AddCommand(commandIndex);
+            }
+        }
+
+        public void AddCommand(Command command)
+        {
+            _processor.Commands.Add(command.Method);
+        }
+
+        public void AddCommand(int commandIndex)
+        {
+            if (commandIndex < 0 || AvailableCommands.Count <= commandIndex)
+                throw new ArgumentException("commandIndex should be between 0 and " + AvailableCommands.Count);
+
+            _processor.Commands.Add(AvailableCommands[commandIndex].Method);
+        }
+
+        private void DownloadCommands()
+        {
+            AvailableCommands = new List<Command>();
+
+            this.AvailableCommands
                 .AddRange(GetType()
                     .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                     .Where(methodInfo => methodInfo.GetCustomAttribute(typeof (CommandInfoAttribute), true) != null)
                     .Select(methodInfo => new Command(methodInfo, this)));
         }
-
-        public void Run()
-        {
-            Processor.Run();
-        }
-
+        
         #region Robot commands
         /*
          * По названию метода происходит загрузка нужной иконки и нужной анимации

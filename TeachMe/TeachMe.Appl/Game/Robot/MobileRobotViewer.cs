@@ -98,7 +98,7 @@ namespace TeachMe.Appl.Game.Robot
         {
             var deltaLocation = _robot.Transform.Location - beforeTransform.Location;
             var deltaAngle = (beforeTransform.Rotation - _robot.Transform.Rotation) * 180 / Math.PI;
-            Animator.PlayTransformAnimation(deltaLocation.X, deltaLocation.Y, deltaAngle, AnimationDuration);
+            Animator.PlayTransformAnimation(deltaLocation.X * Size.Width, deltaLocation.Y * Size.Height, deltaAngle, AnimationDuration);
 
             Animator.PlayAnimation(CurrentCommands[commandIndex].Command.Name);
         }

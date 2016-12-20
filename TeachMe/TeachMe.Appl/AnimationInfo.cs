@@ -12,7 +12,6 @@ namespace TeachMe.Appl
             Name = name;
 
             Animation = new GifBitmapDecoder(path, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
-            Animation.DownloadProgress += (sender, args) => Console.WriteLine("Загруженно " + name);
 
             FrameIndexAnimation = new Int32Animation(0,
                 Animation.Frames.Count - 1,

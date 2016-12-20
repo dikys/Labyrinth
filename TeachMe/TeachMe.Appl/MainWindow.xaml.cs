@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -34,57 +35,108 @@ namespace TeachMe.Appl
     public partial class MainWindow : Window
     {
         public GameModelViewer GameModelViewer;
+
+        public List<Control> DisableControlsWhileRobotIsRun;
+        public List<Control> DisableControlsWhenProgrammEmpty; 
         
         public MainWindow()
         {
             InitializeComponent();
-            
-            Loaded += (sender, args) =>
+
+            Loaded += (sender, args) => InitilizatePage();
+
+            DisableControlsWhileRobotIsRun = new List<Control>()
             {
-                MainCanvas.LayoutTransform = new TransformGroup()
-                {
-                    Children = new TransformCollection()
+                CurrentCommands,
+                AvailableCommands,
+                RunProgramm,
+                ClearProgramm
+            };
+
+            DisableControlsWhenProgrammEmpty = new List<Control>()
+            {
+                RunProgramm,
+                ClearProgramm
+            };
+            DisableControlsWhenProgrammEmpty.ForEach((control) => control.IsEnabled = false);
+
+            // Для верхних трех кнопочек
+            /*this.FoldingButton.Click +=
+                (sender, args) =>
+                    this.WindowState =
+                        this.WindowState == WindowState.Minimized ? WindowState.Normal : WindowState.Minimized;
+            this.MinimizedAndMaximizedButton.Click +=
+                (sender, args) =>
+                    this.WindowState =
+                        this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+            this.ClosingButton.Click += (sender, args) => this.Close();*/
+
+            //CurrentProgramm.ItemsSource = CurrentCommands;
+        }
+
+        public void InitilizatePage()
+        {
+            MainCanvas.LayoutTransform = new TransformGroup()
+            {
+                Children = new TransformCollection()
                     {
                         new ScaleTransform(1, -1),
                         new TranslateTransform(0, -MainCanvas.ActualHeight)
                     }
-                };
-
-                GameModelViewer =
-                    new GameModelViewer(
-                        new GameModel(
-                            new MobileRobot(
-                                new Transform(new Location(1, 1))),
-                            new Field(4)),
-                        MainCanvas);
-
-                CurrentCommands.ItemsSource = GameModelViewer.MobileRobotViewer.CurrentCommands;
-                AvailableCommands.ItemsSource = GameModelViewer.MobileRobotViewer.AvailableCommands;
-                
-                GameModelViewer.MobileRobotViewer.EndProgramm += () =>
-                {
-                    CurrentCommands.IsEnabled = true;
-                    AvailableCommands.IsEnabled = true;
-                };
             };
+
+            GameModelViewer =
+                new GameModelViewer(
+                    new GameModel(
+                        new MobileRobot(
+                            new Transform(new Location(1, 1))),
+                        new Field(4)),
+                    MainCanvas);
+
+            CurrentCommands.ItemsSource = GameModelViewer.MobileRobotViewer.CurrentCommands;
+            AvailableCommands.ItemsSource = GameModelViewer.MobileRobotViewer.AvailableCommands;
+
+            GameModelViewer.MobileRobotViewer.CurrentCommands.CollectionChanged += (sender, args) =>
+            {
+                if (!DisableControlsWhenProgrammEmpty.Any())
+                    return;
+
+                if (GameModelViewer.MobileRobotViewer.CurrentCommands.Count == 0)
+                {
+                    DisableControlsWhenProgrammEmpty.ForEach((control) => control.IsEnabled = false);
+                }
+                else
+                {
+                    if (!DisableControlsWhenProgrammEmpty.First().IsEnabled)
+                    {
+                        DisableControlsWhenProgrammEmpty.ForEach((control) => control.IsEnabled = true);
+                    }
+                }
+            };
+
+            GameModelViewer.MobileRobotViewer.EndProgramm += () => DisableControlsWhileRobotIsRun.ForEach((control) => control.IsEnabled = true);
 
             RunProgramm.Click += (sender, args) =>
             {
                 GameModelViewer.RunProgramm();
 
-                CurrentCommands.IsEnabled = false;
-                AvailableCommands.IsEnabled = false;
+                DisableControlsWhileRobotIsRun.ForEach((control) => control.IsEnabled = false);
+            };
+
+            ClearProgramm.Click += (sender, args) =>
+            {
+                GameModelViewer.MobileRobotViewer.ClearProgramm();
             };
 
             MouseLeftButtonDown += (sender, args) => DragMove();
-            
+
             AvailableCommands.PreviewMouseLeftButtonDown += (sender, args) =>
             {
                 var command = GetCommandViewerInListBox(AvailableCommands, args);
 
                 if (command == null)
                     return;
-                
+
                 DragDrop.DoDragDrop(AvailableCommands, command, DragDropEffects.Copy);
             };
 
@@ -102,7 +154,7 @@ namespace TeachMe.Appl
                         .MobileRobotViewer
                         .CurrentCommands
                         .IndexOf(command));
-                
+
                 DragDrop.DoDragDrop(CurrentCommands, command, DragDropEffects.Move);
             };
 
@@ -141,19 +193,6 @@ namespace TeachMe.Appl
                         .Add(new CommandViewer(draggedCommand));
                 }
             };
-
-            // Для верхних трех кнопочек
-            /*this.FoldingButton.Click +=
-                (sender, args) =>
-                    this.WindowState =
-                        this.WindowState == WindowState.Minimized ? WindowState.Normal : WindowState.Minimized;
-            this.MinimizedAndMaximizedButton.Click +=
-                (sender, args) =>
-                    this.WindowState =
-                        this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
-            this.ClosingButton.Click += (sender, args) => this.Close();*/
-
-            //CurrentProgramm.ItemsSource = CurrentCommands;
         }
 
         private CommandViewer GetCommandViewerInListBox(ListBox listBox, MouseButtonEventArgs mouse)

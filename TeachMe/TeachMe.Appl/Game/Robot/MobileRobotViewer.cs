@@ -5,7 +5,9 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 using TeachMe.Appl.Game.Robot.Command;
+using TeachMe.Appl.Properties;
 using TeachMe.Domain.Robot;
 using Timer = System.Timers.Timer;
 
@@ -28,16 +30,18 @@ namespace TeachMe.Appl.Game.Robot
             {
                 var commandViewer = new CommandViewer(command);
                 
+                // тут можно исключение кидать если этого файла нет
+                // причем вместо него делать изображение ошибка, надеюсь оно будет
                 Animator.Animations.Add(
                     new AnimationInfo(commandViewer.Command.Name,
                         new Uri(CommandViewer.PathToCommandAnimations + commandViewer.Command.Name + ".gif")));
-
+                
                 return commandViewer;
             }).ToList().AsReadOnly();
 
             CurrentCommands = new ObservableCollection<CommandViewer>();
-
-            Animator.PlayAnimation(AvailableCommands[0].Command.Name);
+            
+            Animator.PlayAnimation(0);
         }
         
         private MobileRobot _robot;
@@ -54,7 +58,15 @@ namespace TeachMe.Appl.Game.Robot
 
         public event Action EndProgramm;
 
-        public void ExecuteCurrentCommands()
+        public void ClearProgramm()
+        {
+            if (IsRun)
+                return;
+
+            CurrentCommands.Clear();
+        }
+
+        public void RunProgramm()
         {
             if (IsRun)
                 return;

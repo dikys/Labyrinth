@@ -57,7 +57,7 @@ namespace TeachMe.Appl.Game
 
         public void RunProgramm()
         {
-            MobileRobotViewer.ExecuteCurrentCommands();
+            MobileRobotViewer.RunProgramm();
         }
     }
 }

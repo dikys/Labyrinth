@@ -27,6 +27,8 @@ namespace TeachMe.Appl
             Stretch = Stretch.Fill;
 
             Animations = new List<AnimationInfo>();
+
+            _currentAnimationIndex = -1;
         }
 
         public int FrameIndex
@@ -71,7 +73,7 @@ namespace TeachMe.Appl
                 return;
 
             _currentAnimationIndex = animationIndex;
-
+            
             BeginAnimation(FrameIndexProperty, Animations[animationIndex].FrameIndexAnimation);
         }
 
@@ -114,7 +116,7 @@ namespace TeachMe.Appl
                 transformAnimation.Children.Add(animation);
             }
 
-            transformAnimation.Begin(this);
+            transformAnimation.Begin(this, HandoffBehavior.Compose);
         }
 
         private void SetFrame(int frameIndex)

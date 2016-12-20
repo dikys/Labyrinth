@@ -5,12 +5,112 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:gif="http://wpfanimatedgif.codeplex.com"
         xmlns:local="clr-namespace:TeachMe.Appl"
+        xmlns:command="clr-namespace:TeachMe.Appl.Game.Robot.Command"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="MainWindow"
         Height="586.972"
         Width="903.411"
         Style="{DynamicResource DefaultStyleWindow}">
     <Window.Resources>
+        <Style x:Key="ListBoxItemForCurrentCommands" TargetType="ListBoxItem">
+            <Setter Property="Width" Value="{StaticResource CurrentCommandIconSize}"/>
+            <Setter Property="Height" Value="{StaticResource CurrentCommandIconSize}"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+        <Style x:Key="ListWithCurrentCommands" TargetType="ListBox">
+            <Style.Setters>
+                <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+                <Setter Property="SelectionMode" Value="Single"/>
+                <Setter Property="Height" Value="200"/>
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="Background" Value="#FFFAD5"/>
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="ItemContainerStyle" Value="{StaticResource ListBoxItemForCurrentCommands}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListBox}">
+                            <!--<Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="1" SnapsToDevicePixels="True">-->
+                            <Grid Name="ListGrid"  Background="{TemplateBinding Background}">
+                                <ScrollViewer Focusable="False" Padding="{TemplateBinding Padding}">
+                                    <ScrollViewer.Resources>
+                                        <system:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">4</system:Double>
+                                    </ScrollViewer.Resources>
+                                    <ScrollViewer.Content>
+                                        <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                    </ScrollViewer.Content>
+                                </ScrollViewer>
+                            </Grid>
+                            <!--</Border>-->
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="ListGrid" Property="Opacity" Value="0.5"/>
+                                </Trigger>
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsGrouping" Value="True"/>
+                                        <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="False"/>
+                                    </MultiTrigger.Conditions>
+                                    <Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
+                                </MultiTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="ItemTemplate">
+                    <Setter.Value>
+                        <DataTemplate DataType="command:CommandViewer">
+                            <Grid Cursor="Hand">
+                                <Image Source="{Binding Path=Icon}" Stretch="Fill"></Image>
+                            </Grid>
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style.Setters>
+        </Style>
+
+        <Style x:Key="ListBoxItemForAvailableCommands" TargetType="ListBoxItem" BasedOn="{StaticResource ListBoxItemForCurrentCommands}">
+            <Setter Property="Width" Value="{StaticResource AvailableCommandIconSize}"/>
+            <Setter Property="Height" Value="{StaticResource AvailableCommandIconSize}"/>
+        </Style>
+        <Style x:Key="ListWithAvailableCommands" TargetType="ListBox" BasedOn="{StaticResource ListWithCurrentCommands}">
+            <Style.Setters>
+                <Setter Property="ItemTemplate">
+                    <Setter.Value>
+                        <DataTemplate DataType="command:CommandViewer">
+                            <Grid Cursor="Hand" ToolTip="{Binding Path = Command.Attributes.Description}">
+                                <Image Source="{Binding Path=Icon}" Stretch="Fill"></Image>
+                            </Grid>
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="ItemContainerStyle" Value="{StaticResource ListBoxItemForAvailableCommands}"/>
+            </Style.Setters>
+        </Style>
+
+        <Style x:Key="IconButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="buttonBorder" Background="{TemplateBinding Background}">
+                            <ContentControl Margin="5" Content="{TemplateBinding Content}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="buttonBorder" Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Grid x:Name="MainGrid">
         <Grid.ColumnDefinitions>
@@ -21,7 +121,17 @@
         <Canvas x:Name="MainCanvas" Grid.Column="0">
         </Canvas>
         <DockPanel Grid.Column="1" LastChildFill="False">
-            <Label DockPanel.Dock="Top" HorizontalAlignment="Center" FontSize="20">Текущая программа</Label>
+            <Grid Height="37" DockPanel.Dock="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="37"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" x:Name="ClearProgramm" Style="{StaticResource IconButton}">
+                    <Image Source="Data/Icons/Clear.png" Stretch="Fill"/>
+                </Button>
+                <Label Grid.Column="1" HorizontalAlignment="Center" FontSize="17">Текущая программа</Label>
+            </Grid>
             <ListBox x:Name="CurrentCommands" AllowDrop="True" DockPanel.Dock="Top" Style="{StaticResource ListWithCurrentCommands}"></ListBox>
 
             <Label DockPanel.Dock="Top" HorizontalAlignment="Center" FontSize="20">Доступные команды</Label>
@@ -32,8 +142,8 @@
     </Grid>
 </Window>
 
-    
-    <!--
+
+<!--
     <Image x:Name="CommandIconForMouse" Panel.ZIndex="1000" Width="{StaticResource CommandIconSize}" Height="{StaticResource CommandIconSize}" Stretch="Fill"></Image>
     
     <DockPanel LastChildFill="True">

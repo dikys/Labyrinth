@@ -66,8 +66,8 @@
                 </Setter>
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
-                        <DataTemplate DataType="command:CommandViewer">
-                            <Grid Cursor="Hand">
+                        <DataTemplate x:Name="CommandItem" DataType="command:CommandViewer">
+                            <Grid Name="itemGrid"  Cursor="Hand">
                                 <Image Source="{Binding Path=Icon}" Stretch="Fill"></Image>
                             </Grid>
                         </DataTemplate>

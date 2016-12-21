@@ -19,6 +19,8 @@ namespace TeachMe.Domain.Robot
         public List<Command> AvailableCommands { get; private set; }
         public bool IsProgrammEnd => _processor.IsFinish;
         public int CurrentCommandNumber => _processor.CurrentCommandNumber;
+
+        //public event Action<string> CantDoCommand;
         
         public MobileRobot (Transform transform)
         {
@@ -30,7 +32,8 @@ namespace TeachMe.Domain.Robot
 
         public void RunProgramm()
         {
-            _processor.ExecuteAllCommands();
+            while (IsProgrammEnd)
+                RunNextCommand();
         }
 
         public void RunNextCommand()
@@ -75,6 +78,15 @@ namespace TeachMe.Domain.Robot
                 throw new ArgumentException("commandIndex should be between 0 and " + AvailableCommands.Count);
 
             _processor.Commands.Add(AvailableCommands[commandIndex].Method);
+        }
+
+        public bool CheckCanDoCommand()
+        {
+            var can = false;
+
+            var message = "Я не могу пойти туда";
+
+            return can;
         }
 
         private void DownloadCommands()

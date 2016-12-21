@@ -65,7 +65,7 @@ namespace TeachMe.Appl.Game.Robot
 
             CurrentCommands.Clear();
         }
-
+        
         public void RunProgramm()
         {
             if (IsRun)
@@ -83,6 +83,19 @@ namespace TeachMe.Appl.Game.Robot
             timer.Elapsed += (sender, args) =>
             {
                 Infrastructure.Transform beforeTransform = _robot.Transform;
+
+                if (!_robot.CheckCanDoCommand())
+                {
+                    timer.Stop();
+
+                    if (EndProgramm != null)
+                    {
+                        Animator.Dispatcher.BeginInvoke(EndProgramm);
+                    }
+
+                    return;
+                }
+
                 _robot.RunNextCommand();
 
                 Animator.Dispatcher.BeginInvoke(new Action<int, Infrastructure.Transform>(AnimateRobot),

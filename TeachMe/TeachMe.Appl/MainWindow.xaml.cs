@@ -24,7 +24,7 @@ using Transform = TeachMe.Infrastructure.Transform;
  * 
  * Сделать цель на уровне
  * 
- * Сделать несколько уровней! 
+ * Сделать несколько уровней!
  */
 
 namespace TeachMe.Appl
@@ -123,10 +123,7 @@ namespace TeachMe.Appl
                 DisableControlsWhileRobotIsRun.ForEach((control) => control.IsEnabled = false);
             };
 
-            ClearProgramm.Click += (sender, args) =>
-            {
-                GameModelViewer.MobileRobotViewer.ClearProgramm();
-            };
+            ClearProgramm.Click += (sender, args) => GameModelViewer.MobileRobotViewer.ClearProgramm();
 
             MouseLeftButtonDown += (sender, args) => DragMove();
 

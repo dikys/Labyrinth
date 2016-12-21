@@ -38,14 +38,14 @@ namespace TeachMe.Domain.Robot
             Reboot();
         }
         
-        public void ExecuteAllCommands()
+        /*public void ExecuteAllCommands()
         {
             if (IsFinish)
                 return;
 
             Commands.ForEach(command => command());
             CurrentCommandNumber = Commands.Count - 1;
-        }
+        }*/
 
         public void ExecuteNextCommand()
         {

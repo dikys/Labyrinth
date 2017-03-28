@@ -7,7 +7,7 @@ namespace TeachMe.Appl
 {
     public class AnimationInfo
     {
-        public AnimationInfo(string name, Uri path, bool repeatBehavior = true)
+        public AnimationInfo(string name, Uri path, bool repeatBehavior = false)
         {
             Name = name;
 
